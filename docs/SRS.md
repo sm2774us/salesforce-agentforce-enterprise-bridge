@@ -28,7 +28,7 @@ Personas below model a typical discovery; replace with real names/outcomes when 
 | FR-6 | Risk-tiered actions; HIGH requires approval by a different human, with TTL | `test_hitl_*`, `test_approval_store_ttl` |
 | FR-7 | RBAC: VIEWER/AGENT/APPROVER/ADMIN; fail-closed auth | `test_rbac`, `test_api_end_to_end` |
 | FR-8 | Audit every decision locally and in `Bridge_Audit_Log__c`; retry on outage | `test_audit_outbox` |
-| FR-9 | Create/escalate Cases via Salesforce REST using OAuth 2.0 | `test_salesforce.py` |
+| FR-9 | Create/escalate Cases via Salesforce REST using OAuth 2.0 (JWT Bearer key-based preferred; no secret) | `test_salesforce.py`, `test_jwt_auth.py` |
 | FR-10 | Expose action catalog/OpenAPI for Agentforce External Services | `test_registry` |
 | FR-11 | LLM planner optional; degrade to rules on any failure | `test_resilient_planner` |
 

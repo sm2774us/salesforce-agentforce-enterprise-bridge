@@ -14,7 +14,7 @@ A governed reference architecture that connects fragmented enterprise telemetry 
 | Grounding | Entity resolution (name variants → one account key), DMO-style `UnifiedEvent`, per-account feature-hash vector recall (no cross-tenant leakage) |
 | Planning | Deterministic `RuleBasedPlanner`; optional `AnthropicPlanner` (strict JSON, allow-listed actions, untrusted-input framing) wrapped by `ResilientPlanner` fallback |
 | Governance | `ControlTower`: RBAC → PII redaction → schema validation → risk tier → approval queue (TTL, separation of duties) → execute → audit |
-| Salesforce | OAuth 2.0 client-credentials, REST + SOQL (paginated, injection-safe), retry w/ full jitter, circuit breaker, audit outbox |
+| Salesforce | OAuth 2.0 **JWT Bearer (key-based, no client secret)** or client-credentials, REST + SOQL (paginated, injection-safe), retry w/ full jitter, circuit breaker, audit outbox |
 | Agentforce | `/openapi.json` + `/v1/actions` manifest → register as **External Service** → Flow/Agent Action |
 | Ops | `/healthz`, `/readyz`, Prometheus `/metrics`, GitHub Actions CI/CD, CodeQL, pip-audit |
 
@@ -33,7 +33,7 @@ A governed reference architecture that connects fragmented enterprise telemetry 
 │   ├── actions.py       # ActionRegistry + default Salesforce actions
 │   ├── rbac.py  approvals.py  audit.py  control_tower.py
 │   ├── bus.py  pipeline.py  container.py  api.py  cli.py  samples.py  metrics.py
-├── tests/               # 47 tests, 100% line+branch; tests/live = real-org smoke test
+├── tests/               # 55 tests, 100% line+branch; tests/live = real-org smoke test
 ├── force-app/main/default/   # SFDX: Telemetry_Event__c, Bridge_Audit_Log__c, permission set
 ├── .github/workflows/   # ci, security, salesforce-deploy, live-integration, release
 ├── docs/                # SETUP_GUIDE.md, SOLUTION_EXPLANATION.md, SRS.md, INTERVIEW_PLAYBOOK.md
@@ -157,7 +157,7 @@ Expected tail of `make test` (counts may differ if you add tests):
 ```text
 TOTAL     ...   0 missed   100%
 Required test coverage of 100% reached. Total coverage: 100.00%
-47 passed, 1 deselected
+55 passed, 1 deselected
 ```
 *(The deselected test is the live-org smoke test; it only runs on demand — see §8.)*
 
@@ -265,11 +265,11 @@ Or in the UI: **Setup → Object Manager** → *Telemetry Event* and *Bridge Aud
 2. **API (Enable OAuth Settings):** tick *Enable OAuth*; Callback URL `https://localhost/callback` (required field, unused by this flow); **Selected OAuth Scopes:** *Manage user data via APIs (api)*; tick **Enable Client Credentials Flow**. Save.
 3. **Policies → OAuth Policies:** enable Client Credentials Flow and set **Run As** to your integration user (your own admin user is fine for a dev org; use a dedicated user with only `Bridge_Integration` in production).
 4. **Settings → OAuth Settings → Consumer Key and Secret:** reveal and copy **Consumer Key** (= `SF_CLIENT_ID`) and **Consumer Secret** (= `SF_CLIENT_SECRET`).
-5. Create your local environment file (git-ignored) and load it:
+5. Create your local environment file (git-ignored). The `bridge` CLI loads `.env` automatically (no `source` needed; on macOS/Linux sourcing also works):
 
 ```bash
 cp .env.example .env
-# edit .env: set SF_LOGIN_URL (My Domain URL, no trailing slash), SF_CLIENT_ID, SF_CLIENT_SECRET,
+# edit .env: set SF_LOGIN_URL (My Domain URL, no trailing slash), SF_CLIENT_ID and EITHER the JWT settings (§7b, recommended) OR SF_CLIENT_SECRET,
 # and BRIDGE_API_KEYS (generate strong keys: openssl rand -hex 24)
 set -a; source .env; set +a
 ```
@@ -281,6 +281,71 @@ curl -s -X POST "$SF_LOGIN_URL/services/oauth2/token" \
   -d grant_type=client_credentials -d client_id="$SF_CLIENT_ID" -d client_secret="$SF_CLIENT_SECRET" | jq 'keys'
 # expect: ["access_token","api_domain"?, "instance_url", "token_type", ...]  (never paste this output anywhere)
 ```
+
+### 7b · Key-based authentication (JWT Bearer) — recommended
+
+The bridge supports two Salesforce auth modes and **auto-selects** by configuration: **JWT Bearer (key-based)** when `SF_USERNAME` + a private key are set, otherwise client-credentials (secret-based). With JWT there is **no client secret anywhere**: Salesforce verifies an RS256-signed assertion against the certificate you upload to the External Client App. It is pure Python (`cryptography`), needs no CLI at runtime, and works unchanged in Docker/CI.
+
+> [!NOTE]
+> An interactive browser script (authorization-code + PKCE) is a good way to *prove the app works*, but it needs a human and a browser, so it cannot run headless. Do not commit such scripts; the consumer key belongs in `.env` (`SF_CLIENT_ID`), never in source.
+
+**1 · Generate the key pair** (keep `server.key` private; upload only `server.crt`):
+
+```bash
+mkdir -p secrets
+openssl genrsa -out secrets/server.key 2048
+openssl req -new -x509 -key secrets/server.key -out secrets/server.crt -days 365 -subj "/CN=agentforce-bridge"
+```
+Windows PowerShell (Git for Windows ships OpenSSL; use this if `openssl` is not on `PATH`):
+```powershell
+mkdir secrets
+& "C:\Program Files\Git\usr\bin\openssl.exe" genrsa -out secrets/server.key 2048
+& "C:\Program Files\Git\usr\bin\openssl.exe" req -new -x509 -key secrets/server.key -out secrets/server.crt -days 365 -subj "/CN=agentforce-bridge"
+```
+
+**2 · External Client App (Setup labels vary by release):** in *OAuth Settings* enable **JWT Bearer Flow** and upload `server.crt`; scopes: *Manage user data via APIs (api)* (add *refresh_token, offline_access* if your org requires them for JWT).
+
+**3 · Pre-authorize the user:** *Policies → OAuth Policies → Permitted Users = Admin approved users are pre-authorized*, then assign the app to a profile or permission set that includes `SF_USERNAME`. (Without this you get `invalid_grant: user hasn't approved this consumer`.)
+
+**4 · Configure `.env`** (the CLI loads it automatically — works on Windows, macOS and Linux; real environment variables take precedence):
+
+```dotenv
+SF_LOGIN_URL=https://YOURDOMAIN.develop.my.salesforce.com
+SF_CLIENT_ID=<consumer key>
+SF_USERNAME=<salesforce username>
+SF_PRIVATE_KEY_PATH=./secrets/server.key
+SF_JWT_AUDIENCE=https://login.salesforce.com
+```
+(`https://test.salesforce.com` as the audience for sandboxes. Leave `SF_CLIENT_SECRET` unset.)
+
+**5 · Verify** (authenticates, then calls `/limits`; prints only non-secret details):
+
+```bash
+bridge auth-check
+# OK: {"auth_mode": "jwt", "instance_url": "https://....my.salesforce.com", "daily_api_remaining": 14990}
+bridge demo --live        # then run the real scenario
+```
+
+**6 · CI and containers**
+
+```bash
+gh secret set SF_USERNAME    --env salesforce-dev --body "<salesforce username>"
+gh secret set SF_PRIVATE_KEY --env salesforce-dev < secrets/server.key     # PEM content; \n-escaped also accepted
+docker run --rm -p 8080:8080 --env-file .env \
+  -e SF_PRIVATE_KEY_PATH=/run/secrets/server.key -v "$PWD/secrets/server.key:/run/secrets/server.key:ro" agentforce-bridge
+```
+
+| `auth-check` error | Cause → fix |
+|---|---|
+| `invalid_grant: user hasn't approved this consumer` | user not pre-authorized (step 3) |
+| `invalid_client_id` / `client identifier invalid` | wrong consumer key, or app not yet propagated (wait a few minutes) |
+| `invalid_grant: audience is invalid` | wrong `SF_JWT_AUDIENCE` (production/dev: `login.salesforce.com`; sandbox: `test.salesforce.com`) |
+| `invalid_grant: invalid assertion` / signature errors | uploaded cert does not match `server.key`; re-upload the matching `.crt` |
+| `invalid private key or passphrase` | corrupt PEM, wrong `SF_PRIVATE_KEY_PASSPHRASE`, or a non-RSA key |
+| `cannot read SF_PRIVATE_KEY_PATH` | wrong path (relative to the working directory) |
+| intermittent `invalid_grant` | host clock skew — sync system time (assertions live 180 s) |
+
+**Key hygiene:** `secrets/`, `*.pem`, `*.key`, `*.crt` are git-ignored; rotate before the certificate expires (365 days above); use a dedicated integration user with only `Bridge_Integration` in production; consider a cloud secret manager for `SF_PRIVATE_KEY`.
 
 ### 8 · Run live against your org
 
@@ -330,7 +395,7 @@ gh auth login
 gh api -X PUT repos/sm2774us/salesforce-agentforce-enterprise-bridge/environments/salesforce-dev   # create the environment
 gh secret set SF_LOGIN_URL      --env salesforce-dev --body "$SF_LOGIN_URL"
 gh secret set SF_CLIENT_ID      --env salesforce-dev --body "$SF_CLIENT_ID"
-gh secret set SF_CLIENT_SECRET  --env salesforce-dev --body "$SF_CLIENT_SECRET"
+gh secret set SF_CLIENT_SECRET  --env salesforce-dev --body "$SF_CLIENT_SECRET"   # only for client-credentials mode; JWT secrets are in §7b
 # SFDX auth URL powers the metadata-deploy workflow (treat as a password):
 gh secret set SFDX_AUTH_URL --env salesforce-dev --body "$(sf org display --verbose --json --target-org dev | jq -r '.result.sfdxAuthUrl')"
 gh secret set ANTHROPIC_API_KEY --env salesforce-dev                    # optional; paste when prompted
@@ -374,6 +439,7 @@ Rotate the Consumer Secret if it was ever displayed on a shared screen; never co
 | Lint / format check | `make lint` |
 | Tests with 100% gate | `make test` |
 | Offline demo / benchmark | `make demo` / `make bench` |
+| Verify Salesforce auth | `bridge auth-check` |
 | Live demo | `bridge demo --live` |
 | API server + docs | `bridge serve` → `/docs` |
 | Action catalog | `bridge manifest` |

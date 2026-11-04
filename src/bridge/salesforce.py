@@ -6,6 +6,7 @@ import asyncio
 import itertools
 import random
 import re
+import time
 from collections import defaultdict
 from collections.abc import Awaitable, Callable, Iterable
 from typing import Any, Protocol
@@ -13,6 +14,7 @@ from typing import Any, Protocol
 import httpx
 
 from bridge.config import Settings
+from bridge.jwt_auth import JWT_BEARER_GRANT, build_assertion, load_private_key
 from bridge.resilience import CircuitBreaker, CircuitOpenError, retry_async
 
 _NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
@@ -38,6 +40,18 @@ class TransientSalesforceError(SalesforceError):
 def soql_quote(value: str) -> str:
     """Escapes a string literal for safe SOQL interpolation."""
     return "'" + value.replace("\\", "\\\\").replace("'", "\\'") + "'"
+
+
+def _oauth_detail(resp: httpx.Response) -> str:
+    """Extracts Salesforce's non-secret OAuth error code/description."""
+    try:
+        body = resp.json()
+    except ValueError:
+        return ""
+    if not isinstance(body, dict):
+        return ""
+    code = body.get("error", "")
+    return f": {code} {body.get('error_description', '')}".rstrip()
 
 
 def _check_sobject(name: str) -> None:
@@ -71,6 +85,7 @@ class SalesforceClient:
         breaker: CircuitBreaker | None = None,
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
         rng: Callable[[], float] = random.random,
+        clock: Callable[[], float] = time.time,
     ) -> None:
         """Initializes the client (no network I/O)."""
         self._s = settings
@@ -79,6 +94,8 @@ class SalesforceClient:
         self._breaker = breaker or CircuitBreaker()
         self._sleep = sleep
         self._rng = rng
+        self._clock = clock
+        self._private_key: Any = None
         self._token: str | None = None
         self._instance_url = ""
         self._lock = asyncio.Lock()
@@ -99,16 +116,46 @@ class SalesforceClient:
         if self._owns_http:
             await self._http.aclose()
 
+    def _token_request(self) -> dict[str, str]:
+        """Builds the OAuth token request for the configured flow."""
+        s = self._s
+        if not s.uses_jwt:
+            return {
+                "grant_type": "client_credentials",
+                "client_id": s.sf_client_id,
+                "client_secret": s.sf_client_secret,
+            }
+        if self._private_key is None:
+            self._private_key = load_private_key(
+                s.sf_private_key, s.sf_private_key_passphrase
+            )
+        return {
+            "grant_type": JWT_BEARER_GRANT,
+            "assertion": build_assertion(
+                s.sf_client_id,
+                s.sf_username,
+                s.sf_jwt_audience,
+                self._private_key,
+                self._clock(),
+            ),
+        }
+
+    async def verify(self) -> dict[str, Any]:
+        """Authenticates and calls ``/limits``; returns non-secret details."""
+        resp = await self._request("GET", f"{self._base}/limits")
+        limits = resp.json().get("DailyApiRequests", {})
+        return {
+            "auth_mode": "jwt" if self._s.uses_jwt else "client_credentials",
+            "instance_url": self._instance_url,
+            "daily_api_remaining": limits.get("Remaining"),
+        }
+
     async def _ensure_token(self) -> tuple[str, str]:
         async with self._lock:
             if self._token is None:
                 resp = await self._http.post(
                     f"{self._s.sf_login_url}/services/oauth2/token",
-                    data={
-                        "grant_type": "client_credentials",
-                        "client_id": self._s.sf_client_id,
-                        "client_secret": self._s.sf_client_secret,
-                    },
+                    data=self._token_request(),
                 )
                 if resp.status_code == 429 or resp.status_code >= 500:
                     raise TransientSalesforceError(
@@ -116,7 +163,8 @@ class SalesforceClient:
                     )
                 if resp.status_code != 200:
                     raise SalesforceError(
-                        f"OAuth failed: HTTP {resp.status_code}",
+                        f"OAuth failed: HTTP {resp.status_code}"
+                        f"{_oauth_detail(resp)}",
                         resp.status_code,
                     )
                 body = resp.json()

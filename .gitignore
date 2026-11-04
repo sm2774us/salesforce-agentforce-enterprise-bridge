@@ -8,3 +8,7 @@ coverage.xml
 .ruff_cache/
 .sf/
 .sfdx/
+secrets/
+*.pem
+*.key
+*.crt

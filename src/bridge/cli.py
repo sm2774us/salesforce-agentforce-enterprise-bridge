@@ -13,10 +13,10 @@ from typing import TextIO
 import uvicorn
 
 from bridge.api import create_app
-from bridge.config import Settings
+from bridge.config import Settings, load_dotenv
 from bridge.container import build_container
 from bridge.models import Decision, Principal, Role, TelemetryEvent
-from bridge.salesforce import InMemorySalesforce
+from bridge.salesforce import InMemorySalesforce, SalesforceClient
 from bridge.samples import ACCOUNTS, SAMPLE_EVENTS
 
 APPROVER = Principal(name="demo-approver", role=Role.APPROVER)
@@ -68,6 +68,27 @@ async def _demo(live: bool, out: TextIO) -> int:
     return 0
 
 
+async def _auth_check(out: TextIO) -> int:
+    settings = Settings.from_env()
+    if not settings.salesforce_enabled:
+        print(
+            "Salesforce is not configured: set SF_CLIENT_ID plus either "
+            "SF_USERNAME + SF_PRIVATE_KEY[_PATH] (JWT) or SF_CLIENT_SECRET.",
+            file=out,
+        )
+        return 2
+    client = SalesforceClient(settings)
+    try:
+        info = await client.verify()
+    except Exception as exc:
+        print(f"FAILED: {type(exc).__name__}: {exc}", file=out)
+        return 1
+    finally:
+        await client.aclose()
+    print(f"OK: {json.dumps(info)}", file=out)
+    return 0
+
+
 async def _bench(n: int, out: TextIO) -> int:
     settings = dataclasses.replace(
         _settings(False) or Settings(),
@@ -96,6 +117,7 @@ def main(argv: list[str] | None = None, out: TextIO | None = None) -> int:
     """CLI entry point; returns a process exit code."""
     out = out or sys.stdout
     p = argparse.ArgumentParser(prog="bridge")
+    p.add_argument("--env-file", default=".env", help="dotenv file to load")
     sub = p.add_subparsers(dest="cmd", required=True)
     demo = sub.add_parser("demo", help="run sample events end to end")
     demo.add_argument(
@@ -105,13 +127,17 @@ def main(argv: list[str] | None = None, out: TextIO | None = None) -> int:
     )
     bench = sub.add_parser("bench", help="measure throughput and latency")
     bench.add_argument("-n", type=int, default=2000)
+    sub.add_parser("auth-check", help="verify Salesforce credentials")
     sub.add_parser("manifest", help="print the Agentforce action catalog")
     serve = sub.add_parser("serve", help="run the HTTP API")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8080)
     args = p.parse_args(argv)
+    load_dotenv(args.env_file)
     if args.cmd == "demo":
         return asyncio.run(_demo(args.live, out))
+    if args.cmd == "auth-check":
+        return asyncio.run(_auth_check(out))
     if args.cmd == "bench":
         return asyncio.run(_bench(args.n, out))
     if args.cmd == "manifest":

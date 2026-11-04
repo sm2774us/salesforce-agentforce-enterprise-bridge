@@ -17,11 +17,13 @@ jobs:
         env:
           SF_LOGIN_URL: ${{ secrets.SF_LOGIN_URL }}
           SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID }}
-          SF_CLIENT_SECRET: ${{ secrets.SF_CLIENT_SECRET }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PRIVATE_KEY: ${{ secrets.SF_PRIVATE_KEY }}
         run: pytest -m live -o addopts="" tests/live -v
       - name: Live demo
         env:
           SF_LOGIN_URL: ${{ secrets.SF_LOGIN_URL }}
           SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID }}
-          SF_CLIENT_SECRET: ${{ secrets.SF_CLIENT_SECRET }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PRIVATE_KEY: ${{ secrets.SF_PRIVATE_KEY }}
         run: pip install -e . && bridge demo --live

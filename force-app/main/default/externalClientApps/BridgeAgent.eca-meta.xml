@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalClientApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>sm2774us@gmail.com</contactEmail>
+    <distributionState>Local</distributionState>
+    <isProtected>false</isProtected>
+    <label>BridgeAgent</label>
+    <orgScopedExternalApp>00Dg700000P7fpi:BridgeAgent</orgScopedExternalApp>
+</ExternalClientApplication>

@@ -3,15 +3,11 @@
 **Candidate:** Shaikat Majumdar · **Format:** 45 min, 2:1 panel (leader + FDE), remote · **Project:** `salesforce-agentforce-enterprise-bridge`
 
 ## 0. Integrity rules (read first)
-
 - This repo is a **reference implementation**. Say so in the first 30 seconds. Panels probe; invented production claims collapse under follow-ups.
-
 - The "4 hours → 45 seconds / 70%" figures in your idea notes are **illustrative targets, not measurements**. Use only (a) numbers you **measured** (`make bench`), (b) numbers from **real past engagements you can defend** (e.g., your résumé's 99.2% task-completion, <5-day MVPs), or (c) an explicit **model with stated assumptions** (§6).
-
 - Never claim a Salesforce capability you have not used. Say "I built the integration pattern against a Developer Org; I haven't operated Data Cloud at customer scale."
 
 ## 1. Competency → proof map
-
 | Competency | Proof in the project | Résumé tie-in |
 |---|---|---|
 | Influence stakeholders | SRS persona table; ambiguity/uncertainty split; autonomy tiers negotiated with compliance | Held the room with architects at J.P. Morgan; exec sponsors at Balyasny |
@@ -22,13 +18,11 @@
 | AI ecosystems & frameworks | Agentforce actions, Anthropic API, LangGraph-style planner/tool split | LangChain/LangGraph/LlamaIndex, Agentforce Specialist |
 
 ## 2. Round-1 feedback → what to do
-
 1. **Ambiguity vs uncertainty** → say the words aloud: *"That part was ambiguity—we resolved it by asking; this part was uncertainty—we resolved it by measuring."* (§5)
 2. **Tie outcomes to ROI** → every technical slide ends with a *so-what* line (§6).
 3. **Agentforce in forward-deployed work** → §7 cheat-sheet; show the manifest and External Service path.
 
 ## 3. Run of show (15-minute presentation + 30 min discussion)
-
 | Min | Slide | Say | Show |
 |---|---|---|---|
 | 0:00–1:30 | 1 Who I am | 17 yrs; FDE at Balyasny/J.P. Morgan/Millburn; agentic AI in regulated enterprises; travel-ready 25–40% | résumé one-liner |
@@ -41,7 +35,6 @@
 | 14:00–15:00 | 8 Productionising | MVP vs scale; roadmap | improvements list |
 
 ## 4. Terminal runbook (rehearse twice; have screenshots as fallback)
-
 ```bash
 # T-30 min: pre-flight
 git clone https://github.com/sm2774us/salesforce-agentforce-enterprise-bridge && cd salesforce-agentforce-enterprise-bridge
@@ -61,31 +54,21 @@ curl -s -XPOST localhost:8080/v1/approvals/<ID>/decision -H 'X-API-Key: pk' -H '
 curl -s -XPOST localhost:8080/v1/events -H 'X-API-Key: ak' -d '{"bogus":1}'  # 422 schema drift → DLQ
 bridge bench -n 2000            # measured throughput (offline CRM)
 ```
-
 **Demo narration beats:** (1) "Email and card number never leave the bridge unredacted." (2) "Three spellings, one account." (3) "Agent proposes; Control Tower disposes—$25k waits for a different human." (4) "Every decision is a row in `Bridge_Audit_Log__c`." (5) "Kill the network → breaker opens; `/readyz` flips to 503; audit outbox replays."
-
 **If live org fails:** say so calmly, run `make demo`, show screenshot; failing gracefully *is* the resilience story.
 
 ## 5. Ambiguity vs uncertainty — scripts
-
 - **Ambiguity (people can answer it):** *"'Resolve disputes automatically' had three readings—auto-close, auto-refund, auto-triage. I ran a 90-minute workshop with the COO, compliance and support leads, classified each decision by reversibility and dollar impact, and produced autonomy tiers. That is why `create_case` is LOW and `create_financial_review` is HIGH."*
-
 - **Uncertainty (only experiments answer it):** *"Whether upstream schemas would drift and how Salesforce rate limits behaved weren't knowable by asking. I time-boxed spikes: a strict contract with `extra=forbid` + DLQ, and fault injection against the client. Result: drift is caught at the edge; 429/5xx are retried with jitter, and the breaker caps blast radius."*
-
 - **Framing sentence for any requirement:** "Is the unknown in someone's head (ambiguity) or in the world (uncertainty)? That decides workshop vs spike."
 
 ## 6. Business value & ROI (model, not claim)
-
 Formula: `Savings/yr = alerts/yr × (manual_min − assisted_min)/60 × loaded_$/hr − run_cost`.
-
 Illustrative inputs (state them as assumptions): 20,000 alerts/yr, 25 min manual triage, 3 min human-in-loop for high-risk (~10% of alerts), ~0 for low-risk, $85/hr → manual ≈ 8,333 h; assisted ≈ 20,000×(0.1×3 min)/60 ≈ 100 h + review; savings on the order of **$600–700k/yr** before run cost. Say: *"This is the sizing model I'd validate in week one with the customer's real alert volume."*
-
 Measured, defendable: pipeline p50 ≈ 0.4 ms / p95 ≈ 0.5 ms and ~2.5k events/s offline (excludes CRM network); 0 PII in audit payloads (tested); 100% coverage; MVP from clone to live org in under an hour.
-
 Also quantify **risk avoided**: HITL on 100% of financial actions; full audit trail for SOX-style review.
 
 ## 7. Agentforce / Salesforce forward-deployed cheat-sheet
-
 - **Agentforce** = agents (Agent Builder/Script) + Topics + **Actions** (Flow, Apex, Prompt Templates, External Services/MCP) grounded by the **Einstein Trust Layer** (PII masking, zero data retention, audit). My bridge is the *external action plane*: OpenAPI → External Service → Flow action → agent Action.
 - **Data Cloud:** ingest (streaming/batch/zero-copy), map to **DSO → DMO**, identity resolution → Unified Profile, vector search/RAG for grounding. Mapping: `TelemetryEvent → UnifiedEvent` (DMO), `EntityResolver` (identity resolution), `VectorIndex` (vector search), zero-copy = federate Snowflake/Databricks instead of copying.
 - **Integration:** OAuth 2.0 (client credentials/JWT/web-server flows), Named/External Credentials, REST/Bulk/Composite APIs, Platform Events & Pub/Sub API (gRPC), CDC, **MuleSoft** (system/process/experience API layers) for heavy orchestration.
@@ -96,7 +79,6 @@ Also quantify **risk avoided**: HITL on 100% of financial actions; full audit tr
 ## 8. Simulated Q&A
 
 ### A. Project & architecture
-
 **Q1. Walk me through the project in one minute.** A governed bridge: events are validated, de-duplicated, resolved to an account, PII-stripped, grounded with account-scoped context, planned (rules or LLM), then every tool call passes the Control Tower—RBAC, validation, risk gate, human approval for HIGH, execution against Salesforce, audit to `Bridge_Audit_Log__c`. Business outcome: automation of low-risk triage with provable control on high-risk actions.
 
 **Q2. Why not let Agentforce call Salesforce directly?** It can and should for in-org data. The bridge handles what lives outside: heterogeneous sources, streaming, schema drift, enterprise-specific policy. It exposes those as governed Actions so the agent stays simple and the policy stays testable.
@@ -114,7 +96,6 @@ Also quantify **risk avoided**: HITL on 100% of financial actions; full audit tr
 **Q8. Time/space complexity?** Enqueue O(1); dedupe O(1) bounded LRU; entity resolution O(1) exact, O(K) fuzzy on miss; recall O(n log k); approvals O(1). All buffers bounded (queue, DLQ, audit, history).
 
 ### B. Salesforce & Agentforce specifics
-
 **Q9. How does Agentforce invoke your service?** Import `/openapi.json` as an External Service via a Named Credential, expose operations as Flow actions, add to the agent's topic as Actions with instructions describing when to use them. The manifest includes `requiresApproval` so topic instructions can say "tell the user it is pending".
 
 **Q10. Why client-credentials OAuth?** Server-to-server, no interactive user; scoped to a run-as integration user with the `Bridge_Integration` permission set. For production I'd consider JWT bearer with certificate rotation.
@@ -130,7 +111,6 @@ Also quantify **risk avoided**: HITL on 100% of financial actions; full audit tr
 **Q15. Human approval in Salesforce itself?** Today approvals are API-driven; the roadmap is a Flow/Approval Process on Case with the bridge listening via Platform Event—so approvers work in their native UI.
 
 ### C. Resilience, security, quality
-
 **Q16. What if Salesforce is down?** Breaker opens after 5 failures, `/readyz` → 503, actions fail fast with FAILED audit entries, the audit outbox replays on recovery. Events remain bounded in queue; beyond capacity we return 429 so upstream retries.
 
 **Q17. Duplicate or out-of-order events?** Dedupe by `event_id` (at-least-once safe). Ordering: key Kafka partitions by account in production.
@@ -148,7 +128,6 @@ Also quantify **risk avoided**: HITL on 100% of financial actions; full audit tr
 **Q23. Monitoring in production?** Prometheus counters per decision, fallback/mirror failure counts, p95 latency, queue depth, DLQ size, audit pending sync; alerts on breaker open and DLQ growth.
 
 ### D. Consultative / behavioural
-
 **Q24. Sponsor asks for "fully autonomous". Response?** Reframe to outcomes; show autonomy tiers; start with LOW-risk automation, measure override rate, expand autonomy by evidence.
 
 **Q25. Ambiguity vs uncertainty — example?** §5.
@@ -168,7 +147,6 @@ Also quantify **risk avoided**: HITL on 100% of financial actions; full audit tr
 **Q32. MVP vs scale priorities?** MVP: contract, one happy path, HITL, audit, observability. Scale: persistence, Kafka, multi-replica, rate limits, evals, DR, cost controls.
 
 ### E. Curveballs
-
 **Q33. Design this for 10M events/day.** ~115/s average, ~1k/s peak: Kafka partitioned by account, stateless consumers on K8s HPA, Redis/Postgres for approvals, Data Cloud streaming ingestion, batched Composite writes, backpressure, tiered planners (rules first, LLM on ambiguity only for cost).
 
 **Q34. Reduce LLM cost/latency?** Rules-first routing, prompt caching, small model for classification, cache by normalised message hash, timeouts + fallback.
@@ -180,14 +158,12 @@ Also quantify **risk avoided**: HITL on 100% of financial actions; full audit tr
 **Q37. What would you do in your first 30/60/90 days?** 30: shadow Deployment Strategist, learn product + customer environments, ship one MVP. 60: lead a delivery pod, reusable Action templates. 90: own a customer outcome end-to-end, contribute field feedback and reusable assets.
 
 ## 9. Questions to ask them
-
 1. How do FDEs and Deployment Strategists split discovery vs build on a typical Agentforce engagement?
 2. What does a successful first 90 days look like on this team?
 3. Which Agentforce/Data Cloud gaps do FDEs most often feed back to product?
 4. How are customer outcomes measured after handover?
 
 ## 10. Final checklist
-
 - [ ] Repo cloned fresh; `make test` green; `.env` loaded; org logged in; Case list tab open
 - [ ] Screenshots of demo + diagrams as fallback; slides ≤8
 - [ ] ROI model numbers memorised with assumptions

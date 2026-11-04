@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "salesforce-agentforce-enterprise-bridge"
-version = "1.0.0"
+version = "1.0.1"
 description = "Governed bridge between enterprise telemetry, Salesforce Data Cloud-style grounding and Agentforce Actions."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 dependencies = [
+  "cryptography>=42",
   "fastapi>=0.110",
   "httpx>=0.27",
   "pydantic>=2.7",
