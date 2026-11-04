@@ -21,9 +21,7 @@ async def test_case_roundtrip():
         case_id = await client.create_record(
             "Case", {"Subject": subject, "Origin": "Web"}
         )
-        rows = await client.query(
-            f"SELECT Id FROM Case WHERE Id = '{case_id}'"
-        )
+        rows = await client.query(f"SELECT Id FROM Case WHERE Id = '{case_id}'")
         assert rows[0]["Id"] == case_id
         await client.update_record("Case", case_id, {"Priority": "High"})
     finally:

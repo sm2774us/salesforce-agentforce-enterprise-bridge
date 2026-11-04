@@ -174,7 +174,7 @@ flowchart LR
 Backoff `U(0, min(5s, 0.2·2ⁿ))`; breaker opens after 5 consecutive 5xx/transport failures, half-opens after 30s; 401 → token refresh; 4xx not retried (and don't trip breaker). Bus is bounded (O(1) enqueue, 429 backpressure); dedupe and history are bounded LRU/FIFO (O(1)); vector recall is O(n log k) over ≤100 docs per account; approval store O(1) with lazy expiry. Measured offline (in-memory CRM, 1 core): ~2.5k events/s, p50 0.38 ms, p95 0.51 ms — this excludes real Salesforce network latency.
 
 ## 12. Security
-Secrets only via env / GitHub Environment secrets; masked in `repr`; constant-time API-key compare; fail-closed auth; SOQL escaping + sObject/Id validation; least-privilege permission set; non-root read-only container; CodeQL + pip-audit + Dependabot.
+Secrets only via env / GitHub Environment secrets; masked in `repr`; constant-time API-key compare; fail-closed auth; SOQL escaping + sObject/Id validation; least-privilege permission set; non-root read-only container; CodeQL + pip-audit.
 
 ## 13. How to improve
 1. Replace `EventBus` internals with a Kafka consumer group (key by account for ordering; commit offsets after handling; DLQ topic).

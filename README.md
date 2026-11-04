@@ -16,7 +16,7 @@ A governed reference architecture that connects fragmented enterprise telemetry 
 | Governance | `ControlTower`: RBAC → PII redaction → schema validation → risk tier → approval queue (TTL, separation of duties) → execute → audit |
 | Salesforce | OAuth 2.0 client-credentials, REST + SOQL (paginated, injection-safe), retry w/ full jitter, circuit breaker, audit outbox |
 | Agentforce | `/openapi.json` + `/v1/actions` manifest → register as **External Service** → Flow/Agent Action |
-| Ops | `/healthz`, `/readyz`, Prometheus `/metrics`, GitHub Actions CI/CD, CodeQL, pip-audit, Dependabot |
+| Ops | `/healthz`, `/readyz`, Prometheus `/metrics`, GitHub Actions CI/CD, CodeQL, pip-audit |
 
 ## Directory structure
 
