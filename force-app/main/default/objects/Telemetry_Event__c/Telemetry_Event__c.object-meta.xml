@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Telemetry Event</label>
+    <pluralLabel>Telemetry Events</pluralLabel>
+    <nameField><label>Telemetry Event Name</label><type>AutoNumber</type><displayFormat>TEL-{00000000}</displayFormat></nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <enableReports>true</enableReports>
+</CustomObject>

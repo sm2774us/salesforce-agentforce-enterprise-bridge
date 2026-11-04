@@ -1,0 +1,23 @@
+name: Deploy Salesforce metadata
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: salesforce-dev   # protected environment holding secrets
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: npm install --global @salesforce/cli
+      - name: Authenticate (SFDX auth URL stored as an environment secret)
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+        run: |
+          printf '%s' "$SFDX_AUTH_URL" > /tmp/auth.txt
+          sf org login sfdx-url --sfdx-url-file /tmp/auth.txt --alias dev
+          rm -f /tmp/auth.txt
+      - run: sf project deploy start --source-dir force-app --target-org dev --wait 20
+      - run: sf org assign permset --name Bridge_Integration --target-org dev || true

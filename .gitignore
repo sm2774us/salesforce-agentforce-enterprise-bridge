@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.egg-info/
+.coverage
+coverage.xml
+.venv/
+.pytest_cache/
+.ruff_cache/
+.sf/
+.sfdx/
