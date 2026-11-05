@@ -32,7 +32,11 @@ def _settings(live: bool) -> Settings | None:
 async def _demo(live: bool, out: TextIO) -> int:
     settings = _settings(live)
     if settings is None:
-        print("--live needs SF_CLIENT_ID and SF_CLIENT_SECRET", file=out)
+        print(
+            "--live needs SF_CLIENT_ID plus SF_USERNAME + SF_PRIVATE_KEY[_PATH]"
+            " (JWT) or SF_CLIENT_SECRET",
+            file=out,
+        )
         return 2
     gateway = None if live else InMemorySalesforce(ACCOUNTS)
     c = build_container(settings, gateway=gateway)
