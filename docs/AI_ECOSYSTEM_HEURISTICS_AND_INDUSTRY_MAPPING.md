@@ -36,7 +36,7 @@ The ecosystem graphic has **11 branches** (nine in the text post plus *Vector Da
 | 10 | **Vector database** | 🟡 | In-memory bounded index per account | `VectorIndex` | pgvector / Data Cloud / Pinecone / Qdrant / Elasticsearch |
 | 11 | **Automation / orchestration** | 🛣️ | Async bus, retry, breaker, DLQ | `bus.py`, `resilience.py` | Temporal / Airflow / Prefect for durable retries & replays; n8n / Power Automate for citizen-built flows; Kafka for ingest |
 
-![Ecosystem Coverage Chart](./assets/ecosystem_chart.svg)
+![Ecosystem Coverage Bar Chart](./assets/ecosystem_coverage_bar_chart.svg)
 
 > [!NOTE]
 > **Senior-engineer takeaway from the roadmap graphic:** *"Don't just learn AI tools; learn how to connect them to solve real-world problems."* The bridge is exactly that connective tissue — contracts, grounding, governance, and audit between the model and the business system.
@@ -85,7 +85,7 @@ Each heuristic is a *pressure → technique* pair. Below: whether this solution 
 | 19 | Text + JSON → **Structured output** | ✅ | JSON-only planner contract → pydantic `Plan`; params re-validated against action schemas; invalid → fallback/reject |
 | 20 | Prompts + regression → **Evals** | 🟡 | 47 deterministic tests incl. adversarial planner outputs (100 % line+branch). Golden-set evals + shadow mode are the next gate |
 
-![Heuristics Status Donut](./assets/heuristics_donut.svg)
+![Heuristics Status Donut](./assets/heuristics_status_donut_chart.svg)
 
 # 4 · "Name the pressure" — five tensions this solution resolves
 
@@ -99,7 +99,7 @@ Each heuristic is a *pressure → technique* pair. Below: whether this solution 
 | **Cost/latency vs. quality** | LLM on every event | Rules-first routing, fallback, (roadmap) semantic cache + routing | `ResilientPlanner` |
 | **Prompt changes break behaviour** | Silent regressions | Evals-as-tests, adversarial outputs, 100 % coverage gate; (roadmap) golden set | `tests/`, CI |
 
-![Pressure Network](./assets/pressure_network.svg)
+![Pressure Network Diagram](./assets/pressure_network_diagram.svg)
 
 # 5 · The real-world problem
 
@@ -132,7 +132,7 @@ Every industry has the same shape of problem:
 
 \*Illustrative regimes, not legal advice; confirm per customer.
 
-![Industry Scatter Plot](./assets/industry_scatter.svg)
+![Industry Scatter Plot](./assets/industry_scatter_plot.svg)
 
 > [!TIP]
 > **Sweet spot = top-right** (high regulation *and* high volume): banking/payments and asset management — which is also where the candidate's résumé is strongest (J.P. Morgan AM / Highbridge, Balyasny, Millburn). Lead with that; show breadth second.
@@ -141,7 +141,7 @@ Every industry has the same shape of problem:
 
 ## 7.1 Asset management — reconciliation break (resume-aligned)
 
-![Sequence Asset Management](./assets/sequence_asset_mgmt.svg)
+![Sequence Diagram Asset Management](./assets/sequence_diagram_asset_management.svg)
 
 *Heuristics in play:* RAG, tool use, structured output, evals, (roadmap) semantic cache for repeating breaks.
 
@@ -171,7 +171,7 @@ Redaction (extended with NER) + least-privilege + audit are the *entry ticket*; 
 | P3 | GRPO with verifiable rewards | #7 | Advanced; only if volume justifies | L |
 | P3 | Self-hosted serving (quantization, KV/paged attention, speculative decoding, disaggregation) | #9–12, #16 | Only for sovereignty-driven customers | L |
 
-![Roadmap Flow](./assets/roadmap_flow.svg)
+![Roadmap Flow](./assets/roadmap_flow_diagram.svg)
 
 # 9 · Talking points
 
