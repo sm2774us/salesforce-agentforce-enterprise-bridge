@@ -226,7 +226,7 @@ Switch `Telemetry_Event__c` writes from `POST /sobjects/Telemetry_Event__c` to *
 | Capability | Native gap? | Honest take for v0.0.2 |
 |---|---|---|
 | One enforcement point for **non-Salesforce** actions (same RBAC/approval/audit for ERP and CRM) | Salesforce governance is scoped to Salesforce agents (MuleSoft Agent Fabric targets this, *verify*) | **Genuine reason to keep a sidecar.** |
-| Approvals by **external identity** (approver in an IdP, not a Salesforce user) | Native approvals assume org users | Keep, but move identity to OIDC (`iss|sub`), not a display name. |
+| Approvals by **external identity** (approver in an IdP, not a Salesforce user) | Native approvals assume org users | Keep, but move identity to OIDC (`iss\|sub`), not a display name. |
 | Governance logic that is **unit-testable offline** with 100 % branch coverage | Flow/Orchestrator tests are possible but heavier | Worth keeping as a *test bench* even if production is native. |
 | PII redaction **before** data leaves to an external LLM or log | Trust Layer covers in-platform traffic only | Keep for the external path. |
 | Policy-as-code engine (OPA/YAML), budgets, shadow mode | Partial (Flow, CMDT, guardrails) | **Not in this repo.** Treat as roadmap, not a differentiator. |
