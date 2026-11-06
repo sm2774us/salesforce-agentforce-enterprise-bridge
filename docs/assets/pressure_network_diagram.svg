@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 350" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 13px; }
+    .box { fill: #fff; stroke: #333; stroke-width: 2; rx: 6; ry: 6; }
+    .hub { fill: #eef9ff; stroke: #0056b3; stroke-width: 2.5; rx: 10; ry: 10; }
+    .line { stroke: #555; stroke-width: 2; fill: none; }
+  </style>
+  
+  <!-- Pressure boxes (Left) -->
+  <rect x="20" y="20" width="200" height="35" class="box" />
+  <text x="30" y="43">Pressure: needs action</text>
+
+  <rect x="20" y="70" width="200" height="35" class="box" />
+  <text x="30" y="93">Pressure: stale knowledge</text>
+
+  <rect x="20" y="120" width="200" height="35" class="box" />
+  <text x="30" y="143">Pressure: must parse output</text>
+
+  <rect x="20" y="170" width="200" height="35" class="box" />
+  <text x="30" y="193">Pressure: cost &amp; latency</text>
+
+  <rect x="20" y="220" width="200" height="35" class="box" />
+  <text x="30" y="243">Pressure: regressions</text>
+
+  <rect x="20" y="270" width="200" height="35" class="box" />
+  <text x="30" y="293">Pressure: abuse &amp; leaks</text>
+
+  <!-- Technique boxes (Middle) -->
+  <rect x="260" y="20" width="180" height="35" class="box" />
+  <text x="270" y="43">Tool use</text>
+
+  <rect x="260" y="70" width="180" height="35" class="box" />
+  <text x="270" y="93">RAG + entity resolution</text>
+
+  <rect x="260" y="120" width="180" height="35" class="box" />
+  <text x="270" y="143">Structured output</text>
+
+  <rect x="260" y="170" width="180" height="35" class="box" />
+  <text x="270" y="193">Routing + cache</text>
+
+  <rect x="260" y="220" width="180" height="35" class="box" />
+  <text x="270" y="243">Evals</text>
+
+  <rect x="260" y="270" width="180" height="35" class="box" />
+  <text x="270" y="293">Security + HITL + audit</text>
+
+  <!-- Central Hub (Right) -->
+  <rect x="490" y="110" width="230" height="120" class="hub" />
+  <text x="605" y="160" text-anchor="middle" font-weight="bold" font-size="16">Governed Action Plane</text>
+  <text x="605" y="185" text-anchor="middle" fill="#555" font-size="12">Single Trust Boundary</text>
+
+  <!-- Connectors -->
+  <path d="M 220 37 L 260 37" class="line" />
+  <path d="M 220 87 L 260 87" class="line" />
+  <path d="M 220 137 L 260 137" class="line" />
+  <path d="M 220 187 L 260 187" class="line" />
+  <path d="M 220 237 L 260 237" class="line" />
+  <path d="M 220 287 L 260 287" class="line" />
+
+  <path d="M 440 37 Q 470 37 490 130" class="line" />
+  <path d="M 440 87 Q 465 87 490 145" class="line" />
+  <path d="M 440 137 L 490 160" class="line" />
+  <path d="M 440 187 L 490 180" class="line" />
+  <path d="M 440 237 Q 465 237 490 195" class="line" />
+  <path d="M 440 287 Q 470 287 490 210" class="line" />
+</svg>

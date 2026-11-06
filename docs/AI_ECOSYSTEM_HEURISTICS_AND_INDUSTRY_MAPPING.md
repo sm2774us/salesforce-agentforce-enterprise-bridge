@@ -1,14 +1,12 @@
-# Ecosystem, Heuristics & Industry Mapping {.center}
+# Ecosystem, Heuristics & Industry Mapping
 
-### How `salesforce-agentforce-enterprise-bridge` maps to the Modern AI Ecosystem, the 20 AI Engineering Heuristics, and real industry use-cases {.center}
+### How `salesforce-agentforce-enterprise-bridge` maps to the Modern AI Ecosystem, the 20 AI Engineering Heuristics, and real industry use-cases
 
 > [!IMPORTANT]
-> **Honesty legend used throughout** — ✅ **Implemented** (in the repo, tested) · 🟡 **Partial** (simulated or minimal version) · 🛣️ **Roadmap** (designed seam, not built) · ⛔ **N/A (hosted)** (provider-side concern unless you self-host models).
-> The reference implementation is deliberately narrow: it is a **governed action plane**, not a full AI platform. Claiming more would not survive a 2:1 panel.
+> ✅ **Implemented** (in the repo, tested) · 🟡 **Partial** (simulated or minimal version) · 🛣️ **Roadmap** (designed seam, not built) · ⛔ **N/A (hosted)** (provider-side concern unless you self-host models).
+> The reference implementation is deliberately narrow: it is a **governed action plane**, not a full AI platform.
 
-::pb::
-
-# 1 · The one-paragraph answer {.center}
+# 1 · The one-paragraph answer
 
 Most AI roadmaps list *tools*. The bridge targets the part that decides whether AI ever reaches production in a regulated enterprise: **turning an event into a trustworthy decision and a governed action, with proof.**
 
@@ -16,34 +14,11 @@ $$
 \text{Event} \xrightarrow{\text{ground}} \text{Context} \xrightarrow{\text{plan}} \text{Proposal} \xrightarrow{\text{govern}} \text{Action} \xrightarrow{\text{audit}} \text{Evidence}
 $$
 
+![Pipeline Flow](./assets/pipeline_flow.svg)
+
 It touches **7 of the 9 ecosystem areas** (LLM, agentic, RAG, embeddings, security, observability, memory — at differing depths), ships **2 of 20 heuristics fully** (tool use, structured output), **5 partially**, and has explicit seams for **8 more**; **5 are serving-layer techniques** that only matter if you self-host models.
 
-```mermaid
-flowchart TB
-  subgraph L5[Business outcome]
-    O1[Hours saved · risk avoided · audit-ready evidence]
-  end
-  subgraph L4[Agent runtime]
-    A1[Agentforce Agent · Topics · Actions]
-  end
-  subgraph L3["Governed action plane (THIS REPO)"]
-    G1[Registry + OpenAPI]
-    G2[Control Tower: RBAC · PII · risk gate · HITL · audit]
-    G3[Planner: rules / LLM + fallback]
-    G4[Grounding: entity resolution · vectors · context]
-  end
-  subgraph L2[Data and integration]
-    D1[Data Cloud · Zero-copy · MuleSoft · Kafka]
-  end
-  subgraph L1[Systems of record]
-    S1[ERP · Payments · Telemetry · CRM]
-  end
-  S1 --> D1 --> G4 --> G3 --> G2 --> G1 --> A1 --> O1
-```
-
-::pb::
-
-# 2 · Modern AI Ecosystem — coverage map {.center}
+# 2 · Modern AI Ecosystem — coverage map
 
 The ecosystem graphic has **11 branches** (nine in the text post plus *Vector Database* and *Automation* shown in the image).
 
@@ -61,32 +36,12 @@ The ecosystem graphic has **11 branches** (nine in the text post plus *Vector Da
 | 10 | **Vector database** | 🟡 | In-memory bounded index per account | `VectorIndex` | pgvector / Data Cloud / Pinecone / Qdrant / Elasticsearch |
 | 11 | **Automation / orchestration** | 🛣️ | Async bus, retry, breaker, DLQ | `bus.py`, `resilience.py` | Temporal / Airflow / Prefect for durable retries & replays; n8n / Power Automate for citizen-built flows; Kafka for ingest |
 
-```vega-lite
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Ecosystem coverage by status",
-  "data": {"values": [
-    {"status": "Implemented", "count": 2},
-    {"status": "Partial", "count": 7},
-    {"status": "Roadmap seam", "count": 2}
-  ]},
-  "mark": {"type": "bar", "cornerRadiusTopLeft": 4, "cornerRadiusTopRight": 4},
-  "encoding": {
-    "x": {"field": "status", "type": "nominal", "sort": ["Implemented","Partial","Roadmap seam"], "axis": {"labelAngle": 0}, "title": null},
-    "y": {"field": "count", "type": "quantitative", "title": "Ecosystem areas (of 11)"},
-    "color": {"field": "status", "type": "nominal", "legend": null}
-  },
-  "width": "container",
-  "height": 200
-}
-```
+![Ecosystem Coverage Chart](./assets/ecosystem_chart.svg)
 
 > [!NOTE]
 > **Senior-engineer takeaway from the roadmap graphic:** *"Don't just learn AI tools; learn how to connect them to solve real-world problems."* The bridge is exactly that connective tissue — contracts, grounding, governance, and audit between the model and the business system.
 
-::pb::
-
-# 3 · The 20 AI engineering heuristics — applied {.center}
+# 3 · The 20 AI engineering heuristics — applied
 
 Each heuristic is a *pressure → technique* pair. Below: whether this solution already applies it, how, and where it would bite as you scale.
 
@@ -130,31 +85,11 @@ Each heuristic is a *pressure → technique* pair. Below: whether this solution 
 | 19 | Text + JSON → **Structured output** | ✅ | JSON-only planner contract → pydantic `Plan`; params re-validated against action schemas; invalid → fallback/reject |
 | 20 | Prompts + regression → **Evals** | 🟡 | 47 deterministic tests incl. adversarial planner outputs (100 % line+branch). Golden-set evals + shadow mode are the next gate |
 
-```vega-lite
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Heuristics by status",
-  "data": {"values": [
-    {"status": "Implemented", "count": 2},
-    {"status": "Partial", "count": 5},
-    {"status": "Roadmap seam", "count": 8},
-    {"status": "N/A (hosted)", "count": 5}
-  ]},
-  "mark": {"type": "arc", "innerRadius": 55},
-  "encoding": {
-    "theta": {"field": "count", "type": "quantitative"},
-    "color": {"field": "status", "type": "nominal", "title": "Status (20 heuristics)"}
-  },
-  "width": 260,
-  "height": 260
-}
-```
+![Heuristics Status Donut](./assets/heuristics_donut.svg)
 
-::pb::
+# 4 · "Name the pressure" — five tensions this solution resolves
 
-# 4 · "Name the pressure" — five tensions this solution resolves {.center}
-
-> *"Once you can name the pressure, the technique becomes obvious."* — use this framing in the interview.
+> *"Once you can name the pressure, the technique becomes obvious."*
 
 | Production pressure | Naive failure | Technique(s) applied here | Evidence |
 |---|---|---|---|
@@ -164,25 +99,9 @@ Each heuristic is a *pressure → technique* pair. Below: whether this solution 
 | **Cost/latency vs. quality** | LLM on every event | Rules-first routing, fallback, (roadmap) semantic cache + routing | `ResilientPlanner` |
 | **Prompt changes break behaviour** | Silent regressions | Evals-as-tests, adversarial outputs, 100 % coverage gate; (roadmap) golden set | `tests/`, CI |
 
-```mermaid
-graph LR
-  P1[Pressure: needs action] --> T1[Tool use]
-  P2[Pressure: stale or private knowledge] --> T2[RAG + entity resolution]
-  P3[Pressure: must parse output] --> T3[Structured output]
-  P4[Pressure: cost and latency] --> T4[Routing + cache]
-  P5[Pressure: regressions] --> T5[Evals]
-  P6[Pressure: abuse and leaks] --> T6[Security + HITL + audit]
-  T1 --> R((Governed action plane))
-  T2 --> R
-  T3 --> R
-  T4 --> R
-  T5 --> R
-  T6 --> R
-```
+![Pressure Network](./assets/pressure_network.svg)
 
-::pb::
-
-# 5 · The real-world problem {.center}
+# 5 · The real-world problem
 
 Every industry has the same shape of problem:
 
@@ -196,9 +115,7 @@ Every industry has the same shape of problem:
 | No evidence trail | Audit findings; regulatory exposure | `Bridge_Audit_Log__c` for every decision (executed, pending, denied, rejected, failed) |
 | Integration brittleness | Outages cascade | Backoff + jitter, circuit breaker, DLQ, outbox replay |
 
-::pb::
-
-# 6 · Industry segment mapping {.center}
+# 6 · Industry segment mapping
 
 | Segment | Operational signal (event) | LOW-risk autonomous action | HIGH-risk (human-approved) action | Salesforce surface | Typical compliance drivers* | Value metric |
 |---|---|---|---|---|---|---|
@@ -215,63 +132,17 @@ Every industry has the same shape of problem:
 
 \*Illustrative regimes, not legal advice; confirm per customer.
 
-```vega-lite
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Qualitative fit assessment (author judgment)",
-  "data": {"values": [
-    {"segment": "Asset mgmt", "regulation": 9, "volume": 6},
-    {"segment": "Banking/payments", "regulation": 9, "volume": 9},
-    {"segment": "Insurance", "regulation": 8, "volume": 6},
-    {"segment": "Healthcare", "regulation": 10, "volume": 5},
-    {"segment": "Telecom", "regulation": 6, "volume": 10},
-    {"segment": "Manufacturing/IoT", "regulation": 5, "volume": 9},
-    {"segment": "Retail", "regulation": 5, "volume": 8},
-    {"segment": "Energy/utilities", "regulation": 7, "volume": 7},
-    {"segment": "Public sector", "regulation": 9, "volume": 4},
-    {"segment": "SaaS", "regulation": 4, "volume": 8}
-  ]},
-  "layer": [
-    {"mark": {"type": "circle", "size": 300, "opacity": 0.8},
-     "encoding": {
-       "x": {"field": "regulation", "type": "quantitative", "title": "Regulatory / audit pressure (1–10, judgment)", "scale": {"domain": [0, 11]}},
-       "y": {"field": "volume", "type": "quantitative", "title": "Event volume (1–10, judgment)", "scale": {"domain": [0, 11]}},
-       "color": {"field": "segment", "type": "nominal", "legend": null}}},
-    {"mark": {"type": "text", "dy": -14, "fontSize": 11},
-     "encoding": {
-       "x": {"field": "regulation", "type": "quantitative"},
-       "y": {"field": "volume", "type": "quantitative"},
-       "text": {"field": "segment"}}}
-  ],
-  "width": "container",
-  "height": 320
-}
-```
+![Industry Scatter Plot](./assets/industry_scatter.svg)
 
 > [!TIP]
 > **Sweet spot = top-right** (high regulation *and* high volume): banking/payments and asset management — which is also where the candidate's résumé is strongest (J.P. Morgan AM / Highbridge, Balyasny, Millburn). Lead with that; show breadth second.
 
-::pb::
-
-# 7 · Worked scenarios (use one in the interview) {.center}
+# 7 · Worked scenarios
 
 ## 7.1 Asset management — reconciliation break (resume-aligned)
 
-```mermaid
-sequenceDiagram
-  participant OMS as Order/Position systems
-  participant BR as Bridge
-  participant AG as Agentforce
-  participant OPS as Ops lead
-  participant SF as Salesforce
-  OMS->>BR: break event (amount, account, message)
-  BR->>BR: resolve entity, strip PII, ground with history
-  BR->>SF: create ops Case (LOW) 
-  BR->>OPS: pending approval for $25k adjustment (HIGH)
-  OPS->>BR: approve (different person)
-  BR->>SF: Financial-review Case + audit row
-  AG->>BR: "status of break?" via governed action
-```
+![Sequence Asset Management](./assets/sequence_asset_mgmt.svg)
+
 *Heuristics in play:* RAG, tool use, structured output, evals, (roadmap) semantic cache for repeating breaks.
 
 ## 7.2 Banking/payments — gateway outage with card data in logs
@@ -286,9 +157,7 @@ Telemetry floods (high volume) → **rules-first routing** keeps LLM cost near z
 
 Redaction (extended with NER) + least-privilege + audit are the *entry ticket*; self-hosted open models (quantization, vLLM serving) may be required for data residency — that is when heuristics 9–16 stop being N/A.
 
-::pb::
-
-# 8 · Closing the gaps — prioritised roadmap by heuristic {.center}
+# 8 · Closing the gaps — prioritised roadmap by heuristic
 
 | Priority | Gap | Heuristic(s) | Why first | Effort |
 |---|---|---|---|---|
@@ -302,17 +171,9 @@ Redaction (extended with NER) + least-privilege + audit are the *entry ticket*; 
 | P3 | GRPO with verifiable rewards | #7 | Advanced; only if volume justifies | L |
 | P3 | Self-hosted serving (quantization, KV/paged attention, speculative decoding, disaggregation) | #9–12, #16 | Only for sovereignty-driven customers | L |
 
-```mermaid
-flowchart LR
-  A[Now: governed action plane] --> B[P0: durability + evals]
-  B --> C[P1: retrieval quality + caching + MCP]
-  C --> D[P2: tracing + data flywheel]
-  D --> E[P3: self-hosted serving, RL]
-```
+![Roadmap Flow](./assets/roadmap_flow.svg)
 
-::pb::
-
-# 9 · Interview talking points {.center}
+# 9 · Talking points
 
 **60-second version:** *"The ecosystem has dozens of tools; the hard part is the connective tissue. My bridge is a governed action plane: it grounds the model, constrains it to typed tools, forces consequential actions through a human, and records evidence — so a regulated customer can approve it. In heuristic terms, it implements tool use and structured output, partially implements RAG, routing, hybrid retrieval and evals, and has explicit seams for caching, reranking, fine-tuning and distillation."*
 

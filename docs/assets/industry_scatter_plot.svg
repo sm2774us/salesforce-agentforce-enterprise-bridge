@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 11px; }
+    .axis { stroke: #333; stroke-width: 2; }
+    .dot { stroke: #333; stroke-width: 1.5; }
+    .title { font-size: 14px; font-weight: bold; text-anchor: middle; }
+  </style>
+  
+  <text x="250" y="25" class="title">Industry Segment Fit (Regulation vs. Volume)</text>
+  
+  <!-- Axes -->
+  <line x1="50" y1="270" x2="470" y2="270" class="axis" />
+  <line x1="50" y1="40" x2="50" y2="270" class="axis" />
+  
+  <!-- Axis Labels -->
+  <text x="260" y="310" text-anchor="middle" font-weight="bold">Regulatory / Audit Pressure (1-10)</text>
+  <text x="20" y="155" text-anchor="middle" transform="rotate(-90 20 155)" font-weight="bold">Event Volume (1-10)</text>
+  
+  <!-- Data Points (Banking/Payments & Asset Mgmt at top-right) -->
+  <!-- Banking & Payments (9, 9) -->
+  <circle cx="410" cy="65" r="10" fill="#ff7f0e" class="dot" />
+  <text x="410" y="50" text-anchor="middle">Banking/Payments</text>
+
+  <!-- Asset Management (9, 6) -->
+  <circle cx="410" cy="135" r="10" fill="#1f77b4" class="dot" />
+  <text x="410" y="160" text-anchor="middle">Asset Mgmt</text>
+
+  <!-- Healthcare (9, 5) -->
+  <circle cx="410" cy="160" r="9" fill="#2ca02c" class="dot" />
+  <text x="410" y="182" text-anchor="middle">Healthcare</text>
+
+  <!-- Telecom (6, 10) -->
+  <circle cx="305" cy="40" r="9" fill="#d62728" class="dot" />
+  <text x="305" y="28" text-anchor="middle">Telecom</text>
+
+  <!-- Manufacturing (5, 9) -->
+  <circle cx="270" cy="65" r="9" fill="#9467bd" class="dot" />
+  <text x="270" y="52" text-anchor="middle">Manufacturing</text>
+
+  <!-- Insurance (8, 7) -->
+  <circle cx="375" cy="110" r="9" fill="#8c564b" class="dot" />
+  <text x="375" y="98" text-anchor="middle">Insurance</text>
+
+  <!-- Retail (5, 8) -->
+  <circle cx="270" cy="88" r="8" fill="#e377c2" class="dot" />
+  <text x="270" y="105" text-anchor="middle">Retail</text>
+
+  <!-- Energy (7, 7) -->
+  <circle cx="340" cy="110" r="8" fill="#7f7f7f" class="dot" />
+  <text x="340" y="128" text-anchor="middle">Energy</text>
+
+  <!-- Public Sector (9, 4) -->
+  <circle cx="410" cy="190" r="8" fill="#bcbd22" class="dot" />
+  <text x="410" y="210" text-anchor="middle">Public Sector</text>
+
+  <!-- SaaS (4, 8) -->
+  <circle cx="235" cy="88" r="8" fill="#17becf" class="dot" />
+  <text x="235" y="75" text-anchor="middle">SaaS</text>
+</svg>

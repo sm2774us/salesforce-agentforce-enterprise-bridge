@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; }
+    .axis { stroke: #333; stroke-width: 2; }
+    .bar-impl { fill: #d4edda; stroke: #28a745; stroke-width: 2; }
+    .bar-part { fill: #fff3cd; stroke: #ffc107; stroke-width: 2; }
+    .bar-road { fill: #d1ecf1; stroke: #17a2b8; stroke-width: 2; }
+    .label { font-size: 14px; font-weight: bold; text-anchor: middle; }
+    .value { font-size: 14px; font-weight: bold; text-anchor: middle; fill: #333; }
+    .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+  </style>
+  
+  <text x="250" y="30" class="title">Ecosystem Coverage by Status (11 Areas)</text>
+  
+  <!-- Axes -->
+  <line x1="60" y1="220" x2="450" y2="220" class="axis" />
+  <line x1="60" y1="50" x2="60" y2="220" class="axis" />
+  
+  <!-- Bars -->
+  <!-- Implemented: count 2 -> height ~40px -->
+  <rect x="110" y="140" width="70" height="80" class="bar-impl" rx="4" />
+  <text x="145" y="130" class="value">2</text>
+  <text x="145" y="245" class="label">Implemented</text>
+  
+  <!-- Partial: count 7 -> height ~140px -->
+  <rect x="210" y="80" width="70" height="140" class="bar-part" rx="4" />
+  <text x="245" y="70" class="value">7</text>
+  <text x="245" y="245" class="label">Partial</text>
+  
+  <!-- Roadmap seam: count 2 -> height ~40px -->
+  <rect x="310" y="140" width="70" height="80" class="bar-road" rx="4" />
+  <text x="345" y="130" class="value">2</text>
+  <text x="345" y="245" class="label">Roadmap Seam</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 12px; }
+    .lifeline { stroke: #777; stroke-dasharray: 4,4; stroke-width: 1.5; }
+    .box { fill: #fcfcfc; stroke: #333; stroke-width: 2; rx: 4; ry: 4; }
+    .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    .title { font-size: 14px; font-weight: bold; text-anchor: middle; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+
+  <!-- Lifeline Headers -->
+  <rect x="30" y="20" width="100" height="35" class="box" />
+  <text x="80" y="42" text-anchor="middle" font-weight="bold">OMS / Systems</text>
+
+  <rect x="180" y="20" width="90" height="35" class="box" />
+  <text x="225" y="42" text-anchor="middle" font-weight="bold">Bridge</text>
+
+  <rect x="330" y="20" width="100" height="35" class="box" />
+  <text x="380" y="42" text-anchor="middle" font-weight="bold">Agentforce</text>
+
+  <rect x="490" y="20" width="100" height="35" class="box" />
+  <text x="540" y="42" text-anchor="middle" font-weight="bold">Ops Lead</text>
+
+  <rect x="650" y="20" width="100" height="35" class="box" />
+  <text x="700" y="42" text-anchor="middle" font-weight="bold">Salesforce</text>
+
+  <!-- Lifeline Lines -->
+  <line x1="80" y1="55" x2="80" y2="320" class="lifeline" />
+  <line x1="225" y1="55" x2="225" y2="320" class="lifeline" />
+  <line x1="380" y1="55" x2="380" y2="320" class="lifeline" />
+  <line x1="540" y1="55" x2="540" y2="320" class="lifeline" />
+  <line x1="700" y1="55" x2="700" y2="320" class="lifeline" />
+
+  <!-- Messages -->
+  <path d="M 80 85 L 220 85" class="arrow" />
+  <text x="150" y="78" text-anchor="middle">break event</text>
+
+  <path d="M 225 115 C 265 115, 265 135, 225 135" class="arrow" />
+  <text x="270" y="128">resolve entity, PII redact</text>
+
+  <path d="M 225 165 L 695 165" class="arrow" />
+  <text x="460" y="158" text-anchor="middle">create ops Case (LOW)</text>
+
+  <path d="M 225 195 L 535 195" class="arrow" />
+  <text x="380" y="188" text-anchor="middle">pending approval $25k (HIGH)</text>
+
+  <path d="M 540 230 L 230 230" class="arrow" />
+  <text x="385" y="222" text-anchor="middle">approve (different person)</text>
+
+  <path d="M 225 260 L 695 260" class="arrow" />
+  <text x="460" y="253" text-anchor="middle">Financial review Case + audit</text>
+
+  <path d="M 380 295 L 230 295" class="arrow" />
+  <text x="305" y="288" text-anchor="middle">"status of break?"</text>
+</svg>

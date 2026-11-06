@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 11px; font-weight: bold; }
+    .box { fill: #f8f9fa; stroke: #333; stroke-width: 2; rx: 6; ry: 6; }
+    .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+
+  <rect x="10" y="40" width="135" height="50" class="box" />
+  <text x="77" y="70" text-anchor="middle">Now: Action Plane</text>
+
+  <rect x="175" y="40" width="135" height="50" class="box" />
+  <text x="242" y="63" text-anchor="middle">P0: Durability</text>
+  <text x="242" y="78" text-anchor="middle">+ Evals</text>
+
+  <rect x="340" y="40" width="135" height="50" class="box" />
+  <text x="407" y="63" text-anchor="middle">P1: Retrieval</text>
+  <text x="407" y="78" text-anchor="middle">+ Caching + MCP</text>
+
+  <rect x="505" y="40" width="135" height="50" class="box" />
+  <text x="572" y="63" text-anchor="middle">P2: Tracing</text>
+  <text x="572" y="78" text-anchor="middle">+ Data Flywheel</text>
+
+  <rect x="670" y="40" width="120" height="50" class="box" />
+  <text x="730" y="63" text-anchor="middle">P3: Self-Host</text>
+  <text x="730" y="78" text-anchor="middle">Serving &amp; RL</text>
+
+  <path d="M 145 65 L 170 65" class="arrow" />
+  <path d="M 310 65 L 335 65" class="arrow" />
+  <path d="M 475 65 L 500 65" class="arrow" />
+  <path d="M 640 65 L 665 65" class="arrow" />
+</svg>
