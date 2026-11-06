@@ -14,7 +14,7 @@ $$
 \text{Event} \xrightarrow{\text{ground}} \text{Context} \xrightarrow{\text{plan}} \text{Proposal} \xrightarrow{\text{govern}} \text{Action} \xrightarrow{\text{audit}} \text{Evidence}
 $$
 
-![Pipeline Flow](./assets/pipeline_flow.svg)
+![Pipeline Flow](./assets/whiteboard_pipeline_flow.svg)
 
 It touches **7 of the 9 ecosystem areas** (LLM, agentic, RAG, embeddings, security, observability, memory — at differing depths), ships **2 of 20 heuristics fully** (tool use, structured output), **5 partially**, and has explicit seams for **8 more**; **5 are serving-layer techniques** that only matter if you self-host models.
 
