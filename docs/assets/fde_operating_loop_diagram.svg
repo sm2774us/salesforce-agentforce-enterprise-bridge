@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 130" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 11px; font-weight: bold; }
+    .box { fill: #fff; stroke: #333; stroke-width: 2; rx: 6; ry: 6; }
+    .line { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+
+  <rect x="15" y="40" width="100" height="50" class="box" />
+  <text x="65" y="62" text-anchor="middle">1. Discover</text>
+  <text x="65" y="76" text-anchor="middle" font-weight="normal">with Sponsor</text>
+
+  <rect x="140" y="40" width="100" height="50" class="box" />
+  <text x="190" y="62" text-anchor="middle">2. MVP</text>
+  <text x="190" y="76" text-anchor="middle" font-weight="normal">in days</text>
+
+  <rect x="265" y="40" width="100" height="50" class="box" />
+  <text x="315" y="62" text-anchor="middle">3. Harden</text>
+  <text x="315" y="76" text-anchor="middle" font-weight="normal">Tests &amp; Governance</text>
+
+  <rect x="390" y="40" width="100" height="50" class="box" />
+  <text x="440" y="62" text-anchor="middle">4. Enable</text>
+  <text x="440" y="76" text-anchor="middle" font-weight="normal">Co-build</text>
+
+  <rect x="515" y="40" width="100" height="50" class="box" />
+  <text x="565" y="62" text-anchor="middle">5. Measure</text>
+  <text x="565" y="76" text-anchor="middle" font-weight="normal">KPIs &amp; ROI</text>
+
+  <rect x="640" y="40" width="125" height="50" class="box" fill="#fff3cd" />
+  <text x="702" y="62" text-anchor="middle">6. Feedback</text>
+  <text x="702" y="76" text-anchor="middle" font-weight="normal">to Product</text>
+
+  <!-- Connectors -->
+  <path d="M 115 65 L 140 65" class="line" />
+  <path d="M 240 65 L 265 65" class="line" />
+  <path d="M 365 65 L 390 65" class="line" />
+  <path d="M 490 65 L 515 65" class="line" />
+  <path d="M 615 65 L 640 65" class="line" />
+  <path d="M 702 90 C 702 120, 65 120, 65 90" class="line" />
+</svg>

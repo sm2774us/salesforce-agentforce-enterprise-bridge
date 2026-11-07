@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 320" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 12px; }
+    .box { fill: #fff; stroke: #333; stroke-width: 2; rx: 6; ry: 6; }
+    .decision { fill: #fff3cd; stroke: #ffc107; stroke-width: 2.5; rx: 8; ry: 8; }
+    .design { fill: #d4edda; stroke: #28a745; stroke-width: 2.5; rx: 8; ry: 8; }
+    .line { stroke: #555; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    .title { font-size: 13px; font-weight: bold; text-anchor: middle; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+
+  <!-- Root Request -->
+  <rect x="20" y="135" width="180" height="50" class="box" />
+  <text x="110" y="158" class="title">Sponsor Request:</text>
+  <text x="110" y="174">"Resolve disputes automatically"</text>
+
+  <!-- Question Node -->
+  <rect x="230" y="130" width="180" height="60" class="decision" />
+  <text x="320" y="153" class="title">Is unknown in head</text>
+  <text x="320" y="171" class="title">or in world?</text>
+
+  <!-- Top Path: Ambiguity -->
+  <rect x="440" y="30" width="160" height="50" class="box" />
+  <text x="520" y="52" class="title">Ambiguity (Head)</text>
+  <text x="520" y="68">90-min Workshop</text>
+
+  <rect x="630" y="30" width="130" height="50" class="box" />
+  <text x="695" y="52" class="title">Autonomy Tiers</text>
+  <text x="695" y="68">by Reversibility</text>
+
+  <!-- Bottom Path: Uncertainty -->
+  <rect x="440" y="190" width="160" height="40" class="box" />
+  <text x="520" y="208" class="title">Uncertainty: Schema Drift</text>
+  <text x="520" y="222">Strict contract + DLQ</text>
+
+  <rect x="440" y="245" width="160" height="40" class="box" />
+  <text x="520" y="263" class="title">Uncertainty: 422/5xx Load</text>
+  <text x="520" y="277">Retry + Circuit Breaker</text>
+
+  <!-- Convergence Node -->
+  <rect x="630" y="195" width="130" height="80" class="design" />
+  <text x="695" y="228" class="title">Design:</text>
+  <text x="695" y="246">LOW: Auto-act</text>
+  <text x="695" y="262">HIGH: Human</text>
+
+  <!-- Connections -->
+  <path d="M 200 160 L 230 160" class="line" />
+  <path d="M 410 145 Q 425 55 440 55" class="line" />
+  <path d="M 410 175 Q 425 210 440 210" class="line" />
+  <path d="M 410 175 Q 425 265 440 265" class="line" />
+  <path d="M 600 55 Q 695 55 695 195" class="line" />
+  <path d="M 600 210 L 630 225" class="line" />
+  <path d="M 600 265 L 630 245" class="line" />
+</svg>

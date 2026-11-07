@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 240" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 11px; }
+    .axis { stroke: #333; stroke-width: 2; }
+    .bar { fill: #0070d2; stroke: #005fb2; stroke-width: 2; fill-opacity: 0.85; }
+    .val { font-size: 12px; font-weight: bold; text-anchor: middle; fill: #005fb2; }
+    .title { font-size: 13px; font-weight: bold; text-anchor: middle; }
+  </style>
+
+  <text x="225" y="25" class="title">MODEL: Net Annual Savings by Alert Volume ($k / yr)</text>
+
+  <!-- Axes -->
+  <line x1="50" y1="190" x2="410" y2="190" class="axis" />
+  <line x1="50" y1="40" x2="50" y2="190" class="axis" />
+
+  <!-- Bars -->
+  <!-- 5k alerts: $55k -->
+  <rect x="75" y="175" width="55" height="15" class="bar" rx="3" />
+  <text x="102" y="167" class="val">$55k</text>
+  <text x="102" y="210" text-anchor="middle">5k</text>
+
+  <!-- 10k alerts: $230k -->
+  <rect x="160" y="130" width="55" height="60" class="bar" rx="3" />
+  <text x="187" y="122" class="val">$230k</text>
+  <text x="187" y="210" text-anchor="middle">10k</text>
+
+  <!-- 20k alerts: $580k -->
+  <rect x="245" y="70" width="55" height="120" class="bar" rx="3" />
+  <text x="272" y="62" class="val">$580k</text>
+  <text x="272" y="210" text-anchor="middle">20k</text>
+
+  <!-- 40k alerts: $1,280k -->
+  <rect x="330" y="42" width="55" height="148" class="bar" rx="3" />
+  <text x="357" y="34" class="val">$1,280k</text>
+  <text x="357" y="210" text-anchor="middle">40k</text>
+
+  <text x="230" y="230" text-anchor="middle" font-weight="bold">Alerts per Year</text>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 100" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 10px; font-weight: bold; }
+    .box { fill: #fff; stroke: #333; stroke-width: 1.5; rx: 4; ry: 4; }
+    .line { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#333" />
+    </marker>
+  </defs>
+
+  <rect x="10" y="25" width="80" height="50" class="box" />
+  <text x="50" y="45" text-anchor="middle">1. Prereqs</text>
+  <text x="50" y="58" text-anchor="middle" font-weight="normal">(20m)</text>
+
+  <rect x="100" y="25" width="70" height="50" class="box" />
+  <text x="135" y="45" text-anchor="middle">2. Code</text>
+  <text x="135" y="58" text-anchor="middle" font-weight="normal">(5m)</text>
+
+  <rect x="180" y="25" width="80" height="50" class="box" />
+  <text x="220" y="45" text-anchor="middle">3. Env/Tests</text>
+  <text x="220" y="58" text-anchor="middle" font-weight="normal">(5m)</text>
+
+  <rect x="270" y="25" width="80" height="50" class="box" />
+  <text x="310" y="45" text-anchor="middle">4. Demo/API</text>
+  <text x="310" y="58" text-anchor="middle" font-weight="normal">(5m)</text>
+
+  <rect x="360" y="25" width="85" height="50" class="box" fill="#fff3cd" />
+  <text x="402" y="45" text-anchor="middle">5. Dev Org</text>
+  <text x="402" y="58" text-anchor="middle" font-weight="normal">(15m)</text>
+
+  <rect x="455" y="25" width="85" height="50" class="box" fill="#fff3cd" />
+  <text x="497" y="45" text-anchor="middle">6. Metadata</text>
+  <text x="497" y="58" text-anchor="middle" font-weight="normal">(5m)</text>
+
+  <rect x="550" y="25" width="85" height="50" class="box" fill="#fff3cd" />
+  <text x="592" y="45" text-anchor="middle">7. OAuth</text>
+  <text x="592" y="58" text-anchor="middle" font-weight="normal">(15m)</text>
+
+  <rect x="645" y="25" width="70" height="50" class="box" fill="#d4edda" />
+  <text x="680" y="45" text-anchor="middle">8. Live</text>
+  <text x="680" y="58" text-anchor="middle" font-weight="normal">(5m)</text>
+
+  <rect x="725" y="25" width="65" height="50" class="box" />
+  <text x="757" y="45" text-anchor="middle">9. CI/Agent</text>
+  <text x="757" y="58" text-anchor="middle" font-weight="normal">Opt</text>
+
+  <!-- Connectors -->
+  <path d="M 90 50 L 100 50" class="line" />
+  <path d="M 170 50 L 180 50" class="line" />
+  <path d="M 260 50 L 270 50" class="line" />
+  <path d="M 350 50 L 360 50" class="line" />
+  <path d="M 445 50 L 455 50" class="line" />
+  <path d="M 540 50 L 550 50" class="line" />
+  <path d="M 635 50 L 645 50" class="line" />
+  <path d="M 715 50 L 725 50" class="line" />
+</svg>

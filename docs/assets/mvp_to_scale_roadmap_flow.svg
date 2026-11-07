@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 180" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 11px; }
+    .mvp-bg { fill: #e8f5e9; stroke: #28a745; stroke-width: 2; rx: 8; ry: 8; }
+    .scale-bg { fill: #e3f2fd; stroke: #0070d2; stroke-width: 2; rx: 8; ry: 8; }
+    .box { fill: #fff; stroke: #333; stroke-width: 1.5; rx: 4; ry: 4; }
+    .line { stroke: #333; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+    .title { font-size: 13px; font-weight: bold; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+
+  <!-- MVP Box -->
+  <rect x="15" y="15" width="340" height="150" class="mvp-bg" />
+  <text x="30" y="36" class="title" fill="#1b5e20">MVP Release (Proven)</text>
+  <rect x="30" y="48" width="310" height="24" class="box" />
+  <text x="40" y="64">• Contract + DLQ validation</text>
+  <rect x="30" y="77" width="310" height="24" class="box" />
+  <text x="40" y="93">• Control Tower + HITL + Audit</text>
+  <rect x="30" y="106" width="310" height="24" class="box" />
+  <text x="40" y="122">• OAuth Client Credentials to SF</text>
+
+  <!-- Arrow -->
+  <path d="M 365 90 L 405 90" class="line" />
+
+  <!-- Scale Box -->
+  <rect x="415" y="15" width="350" height="150" class="scale-bg" />
+  <text x="430" y="36" class="title" fill="#0d47a1">Scale Roadmap</text>
+  <rect x="430" y="48" width="320" height="24" class="box" />
+  <text x="440" y="64">• Kafka consumer groups (per-account key)</text>
+  <rect x="430" y="77" width="320" height="24" class="box" />
+  <text x="440" y="93">• Postgres/Redis approvals &amp; audit outbox</text>
+  <rect x="430" y="106" width="320" height="24" class="box" />
+  <text x="440" y="122">• Data Cloud streaming &amp; vector search</text>
+</svg>

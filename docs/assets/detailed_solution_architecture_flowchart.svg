@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="100%" height="100%" style="background-color: transparent; font-family: &#39;Comic Sans MS&#39;, &#39;Chalkboard SE&#39;, &#39;Caveat&#39;, &#39;Architects Daughter&#39;, cursive, sans-serif;">
+  <defs>
+    <!-- Filter for hand-drawn wobble / sketchy roughness -->
+    <filter id="roughness" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+    
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="3" dy="4" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+
+    <!-- Marker Arrowheads -->
+    <marker id="arrow-black" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 2 L 8 5 L 1 8" fill="none" stroke="#2b2b2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 2 L 8 5 L 1 8" fill="none" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 2 L 8 5 L 1 8" fill="none" stroke="#7e22ce" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </marker>
+    <marker id="arrow-dashed" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 1 2 L 8 5 L 1 8" fill="none" stroke="#4b5563" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </marker>
+  </defs>
+
+  <!-- Title Container -->
+  <g filter="url(#roughness)">
+    <path d="M 30,25 C 200,20 700,28 870,22 C 875,45 868,55 872,70 C 650,75 250,68 28,72 C 32,50 25,40 30,25 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="2.5" filter="url(#shadow)" />
+  </g>
+  <text x="450" y="52" text-anchor="middle" fill="#1e293b" font-size="21" font-weight="bold" letter-spacing="0.5">CIO ARCHITECTURE FIT: GOVERNED ACTION PLANE</text>
+
+  <!-- 1. ERP / Payments Box -->
+  <g filter="url(#roughness)">
+    <path d="M 42,112 C 110,108 175,113 212,110 C 216,135 210,165 214,182 C 140,185 80,179 40,181 C 44,155 38,130 42,112 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="2.5" filter="url(#shadow)" />
+  </g>
+  <text x="127" y="142" text-anchor="middle" fill="#1e293b" font-size="16" font-weight="bold">ERP / Payments</text>
+  <text x="127" y="163" text-anchor="middle" fill="#64748b" font-size="13">(System of Record)</text>
+
+  <!-- 2. MuleSoft System APIs -->
+  <g filter="url(#roughness)">
+    <path d="M 272,111 C 350,107 410,113 452,109 C 456,132 450,162 454,181 C 375,184 310,178 270,182 C 274,155 268,132 272,111 Z" fill="#ffffff" stroke="#0284c7" stroke-width="2.5" filter="url(#shadow)" />
+  </g>
+  <text x="362" y="142" text-anchor="middle" fill="#0369a1" font-size="16" font-weight="bold">MuleSoft System APIs</text>
+  <text x="362" y="163" text-anchor="middle" fill="#0284c7" font-size="13">(Integration Fabric)</text>
+
+  <!-- 3. Kafka / Streams -->
+  <g filter="url(#roughness)">
+    <path d="M 41,222 C 115,218 170,223 211,220 C 215,245 209,275 213,292 C 145,295 75,289 39,291 C 43,265 37,240 41,222 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="2.5" filter="url(#shadow)" />
+  </g>
+  <text x="126" y="252" text-anchor="middle" fill="#1e293b" font-size="16" font-weight="bold">Kafka / Streams</text>
+  <text x="126" y="273" text-anchor="middle" fill="#64748b" font-size="13">(Operational Events)</text>
+
+  <!-- 4. BRIDGE (Centerpiece Box) -->
+  <g filter="url(#roughness)">
+    <path d="M 262,212 C 340,206 415,213 462,208 C 468,240 460,280 464,302 C 385,306 315,298 260,303 C 265,270 258,240 262,212 Z" fill="#eff6ff" stroke="#1d4ed8" stroke-width="3" filter="url(#shadow)" />
+  </g>
+  <text x="362" y="244" text-anchor="middle" fill="#1e40af" font-size="18" font-weight="bold" letter-spacing="1">BRIDGE</text>
+  <text x="362" y="266" text-anchor="middle" fill="#1d4ed8" font-size="15" font-weight="bold">Governed Action Plane</text>
+  <text x="362" y="287" text-anchor="middle" fill="#3b82f6" font-size="12">(RBAC · PII · Risk · Audit)</text>
+
+  <!-- 5. Agentforce Agent Box -->
+  <g filter="url(#roughness)">
+    <path d="M 570,212 C 640,207 700,214 745,209 C 750,240 742,278 747,301 C 675,305 615,299 568,303 C 573,272 566,240 570,212 Z" fill="#f0fdf4" stroke="#15803d" stroke-width="3" filter="url(#shadow)" />
+  </g>
+  <text x="658" y="249" text-anchor="middle" fill="#14532d" font-size="17" font-weight="bold">Agentforce Agent</text>
+  <text x="658" y="274" text-anchor="middle" fill="#166534" font-size="13">(Reasoning & UX Layer)</text>
+
+  <!-- 6. Sales / Service Cloud (Hand-drawn Cylinder) -->
+  <g filter="url(#roughness)">
+    <path d="M 280,380 C 280,365 440,365 440,380 L 440,440 C 440,455 280,455 280,440 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="2.5" filter="url(#shadow)" />
+    <path d="M 280,380 C 280,395 440,395 440,380" fill="none" stroke="#2b2b2b" stroke-width="2.5" />
+  </g>
+  <text x="360" y="415" text-anchor="middle" fill="#1e293b" font-size="15" font-weight="bold">Sales / Service Cloud</text>
+  <text x="360" y="434" text-anchor="middle" fill="#64748b" font-size="12">(CRM Record Store)</text>
+
+  <!-- 7. Snowflake / Databricks (Hand-drawn Cylinder) -->
+  <g filter="url(#roughness)">
+    <path d="M 560,110 C 560,95 750,95 750,110 L 750,160 C 750,175 560,175 560,160 Z" fill="#ffffff" stroke="#2b2b2b" stroke-width="2.5" filter="url(#shadow)" />
+    <path d="M 560,110 C 560,125 750,125 750,110" fill="none" stroke="#2b2b2b" stroke-width="2.5" />
+  </g>
+  <text x="655" y="140" text-anchor="middle" fill="#1e293b" font-size="15" font-weight="bold">Snowflake / Databricks</text>
+  <text x="655" y="157" text-anchor="middle" fill="#64748b" font-size="12">(Enterprise Data Lake)</text>
+
+  <!-- 8. Data Cloud -->
+  <g filter="url(#roughness)">
+    <path d="M 562,342 C 635,338 705,344 751,340 C 755,365 749,398 753,418 C 675,421 610,416 559,419 C 564,392 558,368 562,342 Z" fill="#faf5ff" stroke="#7e22ce" stroke-width="2.5" filter="url(#shadow)" />
+  </g>
+  <text x="656" y="373" text-anchor="middle" fill="#581c87" font-size="17" font-weight="bold">Data Cloud</text>
+  <text x="656" y="396" text-anchor="middle" fill="#7e22ce" font-size="13">(Grounding System)</text>
+
+  <!-- ================= ARROWS & CONNECTORS ================= -->
+
+  <!-- ERP -> MuleSoft -->
+  <path d="M 213,145 C 230,143 245,147 262,145" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow-black)" />
+
+  <!-- MuleSoft -> Bridge -->
+  <path d="M 362,182 C 360,190 364,198 362,204" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow-black)" />
+
+  <!-- Kafka -> Bridge -->
+  <path d="M 213,256 C 230,254 242,258 254,255" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow-black)" />
+
+  <!-- Bridge -> Agentforce (OpenAPI Highlight Arrow) -->
+  <path d="M 464,255 C 495,253 535,257 562,255" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow-blue)" />
+  <text x="513" y="244" text-anchor="middle" fill="#1e40af" font-size="11" font-weight="bold">OpenAPI → External Service</text>
+
+  <!-- Bridge -> CRM (REST/SOQL) -->
+  <path d="M 362,304 C 360,325 364,345 361,368" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow-black)" />
+  <text x="360" y="340" text-anchor="middle" fill="#334155" font-size="11" font-weight="bold">REST / SOQL</text>
+
+  <!-- Snowflake -. zero-copy .-> Data Cloud (Dashed Connector Line) -->
+  <path d="M 655,175 C 653,225 657,280 655,330" fill="none" stroke="#4b5563" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-dashed)" />
+
+  <!-- Data Cloud -> Agentforce -->
+  <path d="M 656,340 C 654,330 658,320 656,308" fill="none" stroke="#7e22ce" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrow-purple)" />
+
+  <!-- ================= CREATIVE SIDE CALLOUT FOR ZERO-COPY ================= -->
+
+  <!-- Hand-drawn Callout Pointer Line pointing to the zero-copy dashed line -->
+  <path d="M 778,255 C 740,253 700,254 665,255" fill="none" stroke="#ca8a04" stroke-width="2.2" stroke-dasharray="3,3" marker-end="url(#arrow-dashed)" />
+
+  <!-- Hand-Drawn Post-It / Sticky Note Callout Box on the Right Side -->
+  <g filter="url(#roughness)">
+    <path d="M 772,220 C 825,216 870,222 888,218 C 892,250 886,280 890,295 C 835,299 790,294 770,297 C 774,270 768,242 772,220 Z" fill="#fef08a" stroke="#ca8a04" stroke-width="2" filter="url(#shadow)" />
+  </g>
+
+  <!-- Callout Pin / Tape -->
+  <g filter="url(#roughness)">
+    <rect x="815" y="212" width="30" height="12" rx="2" fill="#fde047" stroke="#a16207" stroke-width="1" opacity="0.8" />
+  </g>
+
+  <!-- Callout Text -->
+  <text x="830" y="243" text-anchor="middle" fill="#854d0e" font-size="13" font-weight="bold">✨ ZERO-COPY</text>
+  <text x="830" y="262" text-anchor="middle" fill="#a16207" font-size="11" font-weight="bold">Direct Data Cloud</text>
+  <text x="830" y="278" text-anchor="middle" fill="#a16207" font-size="11">Federation</text>
+
+</svg>

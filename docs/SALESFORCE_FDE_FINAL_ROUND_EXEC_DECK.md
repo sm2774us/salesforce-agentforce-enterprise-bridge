@@ -1,17 +1,15 @@
-# Governed AI Agents on Salesforce {.center}
+# Governed AI Agents on Salesforce
 
-### From fragmented enterprise data to trusted, auditable action — Agentforce · Data Cloud · MuleSoft-ready {.center}
+### From fragmented enterprise data to trusted, auditable action — Agentforce · Data Cloud · MuleSoft-ready
 
-**Shaikat Majumdar** — Senior Forward Deployed Engineer · Agentic AI Systems & Enterprise Integrations {.center}
+**Shaikat Majumdar** — Senior Forward Deployed Engineer · Agentic AI Systems & Enterprise Integrations
 
-*Salesforce FDE Final Round · 2:1 panel · 15-minute walkthrough + live demo* {.center}
+*Salesforce FDE Final Round · 2:1 panel · 15-minute walkthrough + live demo*
 
 > [!NOTE]
 > **Honesty frame (say it in the first 30 seconds):** `salesforce-agentforce-enterprise-bridge` is a *reference implementation* I built on a free Developer Org. Numbers marked **MEASURED** come from the repo's own benchmark; numbers marked **MODEL** are sizing assumptions I would validate with the customer in week one.
 
-::pb::
-
-# 1 · Executive summary {.center}
+# 1 · Executive summary
 
 > [!IMPORTANT]
 > **The ask of every CEO/COO:** "Let AI act on our data — without hallucinating, leaking, or doing something we can't undo or explain."
@@ -26,9 +24,7 @@
 | Will it survive bad days? | Backoff + circuit breaker + DLQ + audit replay; LLM outage → deterministic fallback |
 | What's the payoff? | **MODEL:** ≈ \$0.70M/yr gross at 20k alerts/yr; break-even ≈ 3.4k alerts/yr |
 
-::pb::
-
-# 2 · Who I am — and why it maps to this role {.center}
+# 2 · Who I am — and why it maps to this role
 
 **17+ years** building and shipping software inside customer environments; the last decade as a forward deployed engineer in regulated finance.
 
@@ -41,51 +37,25 @@
 > [!TIP]
 > **One-liner:** "I'm the engineer who sits with the sponsor in the morning and ships the integration by Friday — then teaches the customer's team to run it."
 
-::pb::
+# 3 · The real problem
 
-# 3 · The real problem {.center}
-
-```mermaid
-graph LR
-A[ERP · Payments · Telemetry silos] --> B{AI agent acts on raw data}
-B --> C[Hallucinated or stale context]
-B --> D[PII leaks into prompts and CRM]
-B --> E[Irreversible action with no approver]
-B --> F[No audit trail for regulators]
-C --> G((Executive risk: cost, compliance, trust))
-D --> G
-E --> G
-F --> G
-```
+![Executive Risk Flow](./assets/whiteboard_risk_flow_diagram.svg)
 
 **The business problem is not "build an agent." It is "make autonomy safe enough to approve."**
 
 - Triage today is manual: slow, inconsistent, and unauditable.
-- Pilots stall at the security/compliance gate — not at model quality.
+- Pilots stall at the security/compliance review gate — not at model quality.
 - Value is unlocked only when the *control plane* is credible to the CISO and the COO.
 
 > [!WARNING]
 > Every agent demo that skips governance is a demo the compliance lead will veto in the second meeting.
 
-::pb::
-
-# 4 · Discovery: ambiguity vs. uncertainty {.center}
+# 4 · Discovery: ambiguity vs. uncertainty
 
 > **Ambiguity** = the requirement is unclear → resolved by *asking people* (workshop).
 > **Uncertainty** = the answer is unknown in the world → resolved by *measuring* (spike).
 
-```mermaid
-graph TD
-R[Sponsor: Resolve disputes automatically] --> Q{Is the unknown in someone's head or in the world?}
-Q -- Head --> A[Ambiguity → 90-min decision workshop]
-Q -- World --> U[Uncertainty → time-boxed spike]
-A --> A1[Autonomy tiers by reversibility and dollar impact]
-U --> U1[Schema drift → strict contract + DLQ]
-U --> U2[429 / 5xx / expired token → retry + breaker]
-A1 --> D[Design: LOW auto-acts · HIGH needs human]
-U1 --> D
-U2 --> D
-```
+![Ambiguity vs Uncertainty Tree](./assets/ambiguity_vs_uncertainty_tree_diagram.svg)
 
 | Type | Example | How resolved | Result in code |
 |---|---|---|---|
@@ -94,42 +64,14 @@ U2 --> D
 | Uncertainty | Will upstream schemas drift? | Contract spike | `extra="forbid"` → 422 + DLQ |
 | Uncertainty | How does Salesforce behave under load? | Fault injection | Full-jitter retry, circuit breaker, 401 refresh |
 
-::pb::
+# 5 · Solution on a page
 
-# 5 · Solution on a page {.center}
-
-```mermaid
-flowchart LR
-  subgraph Enterprise
-    S[ERP / Payments / Telemetry]
-  end
-  subgraph Bridge[Agentforce Enterprise Bridge]
-    I[Ingest: contract · dedupe · backpressure · DLQ]
-    G[Grounding: entity resolution · DMO · vector recall]
-    P[Planner: rules or LLM with fallback]
-    C[AI Control Tower: RBAC · PII · risk gate · audit]
-    H[Human approval]
-  end
-  subgraph SF[Salesforce]
-    K[Case]
-    T[Telemetry_Event__c]
-    A[Bridge_Audit_Log__c]
-    AG[Agentforce Agent + External Service]
-  end
-  S --> I --> G --> P --> C
-  C -->|LOW| K
-  C -->|HIGH| H --> K
-  G --> T
-  C --> A
-  AG -->|invoke governed action| C
-```
+![Solution Architecture](./assets/solution_architecture_flowchart.svg)
 
 > [!NOTE]
 > **Design principle:** the LLM can only *propose*. RBAC, validation, risk gating, and approval are enforced in code the model cannot talk its way past.
 
-::pb::
-
-# 6 · Speaking Salesforce: ecosystem mapping {.center}
+# 6 · Speaking Salesforce: ecosystem mapping
 
 | Salesforce capability | What I built (pattern) | Production swap |
 |---|---|---|
@@ -145,61 +87,13 @@ flowchart LR
 > [!TIP]
 > Say: *"I built the pattern against a Developer Org. I haven't operated Data Cloud at customer scale — here's how I'd close that gap in my first 30 days."*
 
-::pb::
+# 7 · A request, end to end
 
-# 7 · A request, end to end {.center}
+![Sequence Execution Flow](./assets/sequence_execution_flow_diagram.svg)
 
-```mermaid
-sequenceDiagram
-  autonumber
-  participant S as Source system
-  participant API as Bridge API
-  participant G as Grounding
-  participant P as Planner
-  participant CT as Control Tower
-  participant H as Approver (human)
-  participant SF as Salesforce
-  S->>API: POST /v1/events
-  API->>API: validate · dedupe · 429 if saturated
-  API->>G: ingest (resolve entity, redact PII)
-  G->>SF: mirror Telemetry_Event__c (best effort)
-  G->>P: UnifiedEvent + GroundedContext
-  P->>CT: proposed ActionRequest
-  CT->>CT: RBAC · redact · validate · risk tier
-  alt LOW risk
-    CT->>SF: create Case (OAuth · retry · breaker)
-  else HIGH risk
-    CT->>H: pending approval (202)
-    H->>CT: approve (must differ from requester)
-    CT->>SF: create Case
-  end
-  CT->>SF: Bridge_Audit_Log__c (always)
-```
+# 8 · Governance: autonomy by risk
 
-::pb::
-
-# 8 · Governance: autonomy by risk {.center}
-
-```vega-lite
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Autonomy tiers",
-  "data": {"values": [
-    {"action": "create_case", "tier": "LOW — autonomous", "reversibility": 8, "dollar": 2},
-    {"action": "escalate_case", "tier": "HIGH — human approval", "reversibility": 5, "dollar": 6},
-    {"action": "create_financial_review", "tier": "HIGH — human approval", "reversibility": 4, "dollar": 9}
-  ]},
-  "mark": {"type": "circle", "size": 600, "opacity": 0.85},
-  "encoding": {
-    "x": {"field": "reversibility", "type": "quantitative", "title": "Reversibility (higher = easier to undo)", "scale": {"domain": [0, 10]}},
-    "y": {"field": "dollar", "type": "quantitative", "title": "Business / dollar impact", "scale": {"domain": [0, 10]}},
-    "color": {"field": "tier", "type": "nominal", "title": "Tier"},
-    "tooltip": [{"field": "action"}, {"field": "tier"}]
-  },
-  "width": "container",
-  "height": 260
-}
-```
+![Autonomy Tiers Scatter Plot](./assets/autonomy_tiers_scatter_plot.svg)
 
 | Control | Enforced by | Proven by test |
 |---|---|---|
@@ -212,9 +106,7 @@ sequenceDiagram
 > [!IMPORTANT]
 > **Autonomy is earned by evidence:** start LOW-risk only, track the human *override rate*, expand tiers when it stays low.
 
-::pb::
-
-# 9 · Live demo (≈ 4.5 min) {.center}
+# 9 · Live demo (≈ 4.5 min)
 
 ```bash
 make demo                  # offline: PII stripped · 3 spellings → 1 account · $25k held for approval
@@ -235,9 +127,7 @@ bridge bench -n 2000       # measured throughput and latency
 > [!CAUTION]
 > If the live org fails: say so calmly, run `make demo`, show screenshots. **Failing gracefully *is* the resilience story.** Never show `.env` on screen.
 
-::pb::
-
-# 10 · Hard problems solved {.center}
+# 10 · Hard problems solved
 
 | Challenge | Naive failure | What I built |
 |---|---|---|
@@ -253,9 +143,7 @@ $$
 \text{Backoff}_n = U\!\left(0,\ \min(5\,\text{s},\ 0.2\cdot 2^{n})\right)
 $$
 
-::pb::
-
-# 11 · Measured results {.center}
+# 11 · Measured results
 
 **MEASURED** (`bridge bench -n 2000`, offline in-memory CRM, single core — excludes real Salesforce network latency):
 
@@ -267,29 +155,9 @@ $$
 | Test suite | **47 tests · 100 % line + branch coverage** (enforced in CI) |
 | CI | Python 3.11 / 3.12 / 3.13 matrix · ruff · CodeQL · pip-audit · Docker build |
 
-```vega-lite
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Demo decision outcomes (measured)",
-  "data": {"values": [
-    {"decision": "Executed autonomously", "count": 5},
-    {"decision": "Held for human approval", "count": 1},
-    {"decision": "Denied / rejected / failed", "count": 0}
-  ]},
-  "mark": {"type": "bar", "cornerRadiusTopLeft": 4, "cornerRadiusTopRight": 4},
-  "encoding": {
-    "x": {"field": "decision", "type": "nominal", "sort": null, "axis": {"labelAngle": 0}, "title": null},
-    "y": {"field": "count", "type": "quantitative", "title": "Events (demo set)"},
-    "color": {"field": "decision", "type": "nominal", "legend": null}
-  },
-  "width": "container",
-  "height": 220
-}
-```
+![Demo Decision Outcomes Chart](./assets/decision_outcomes_bar_chart.svg)
 
-::pb::
-
-# 12 · Business value & ROI {.center}
+# 12 · Business value & ROI
 
 > [!WARNING]
 > **MODEL, not a claim.** Inputs are stated assumptions to be replaced with the customer's real volumes in week one.
@@ -311,51 +179,14 @@ $$
 
 **Result:** manual ≈ 8,333 h → assisted ≈ 100 h · **gross ≈ \$0.70M/yr · net ≈ \$0.58M/yr · break-even ≈ 3.4k alerts/yr**
 
-```vega-lite
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "MODEL: net annual savings by alert volume",
-  "data": {"values": [
-    {"alerts": "5k", "net": 55},
-    {"alerts": "10k", "net": 230},
-    {"alerts": "20k", "net": 580},
-    {"alerts": "40k", "net": 1280}
-  ]},
-  "mark": {"type": "bar", "cornerRadiusTopLeft": 4, "cornerRadiusTopRight": 4},
-  "encoding": {
-    "x": {"field": "alerts", "type": "ordinal", "sort": ["5k","10k","20k","40k"], "title": "Alerts per year (MODEL)", "axis": {"labelAngle": 0}},
-    "y": {"field": "net", "type": "quantitative", "title": "Net savings, \$ thousands / yr"},
-    "color": {"field": "net", "type": "quantitative", "scale": {"scheme": "blues"}, "legend": null}
-  },
-  "width": "container",
-  "height": 220
-}
-```
+![ROI Net Savings Chart](./assets/roi_net_savings_chart.svg)
 
 > [!TIP]
 > **Beyond hours:** risk avoided — 100 % of financial actions human-approved, 100 % audited — is what unblocks a stalled pilot. That, not the hours, is the CFO/CISO conversation.
 
-::pb::
+# 13 · MVP now → scale next
 
-# 13 · MVP now → scale next {.center}
-
-```mermaid
-flowchart LR
-  subgraph MVP[Initial release — proven]
-    M1[Versioned contract + DLQ]
-    M2[Control Tower + HITL + audit]
-    M3[OAuth client-credentials to Salesforce]
-    M4[Health · readiness · metrics]
-  end
-  subgraph SCALE[Scale — roadmap]
-    S1[Kafka consumer groups keyed by account]
-    S2[Postgres/Redis approvals + audit outbox]
-    S3[Data Cloud streaming ingestion + vector search]
-    S4[Platform Events + in-org Flow approvals]
-    S5[LLM eval harness · OpenTelemetry · rate limits]
-  end
-  MVP --> SCALE
-```
+![MVP to Scale Flow](./assets/mvp_to_scale_roadmap_flow.svg)
 
 | Initial release priority | Scale priority |
 |---|---|
@@ -366,19 +197,9 @@ flowchart LR
 > [!CAUTION]
 > **Known limit (own it):** approvals and the audit retry queue are in-memory → single replica, lost on restart. First fix: Postgres + idempotent upsert on `Audit_Id__c`.
 
-::pb::
+# 14 · How I'd operate as a Salesforce FDE
 
-# 14 · How I'd operate as a Salesforce FDE {.center}
-
-```mermaid
-flowchart LR
-  A[Discover with sponsor + architects] --> B[MVP in days on customer org]
-  B --> C[Harden: tests · ADRs · governance]
-  C --> D[Enable customer team: co-build workshops]
-  D --> E[Measure: KPIs · override rate · ROI]
-  E --> F[Feed field gaps back to Product]
-  F --> A
-```
+![FDE Operating Loop](./assets/fde_operating_loop_diagram.svg)
 
 | Window | Focus |
 |---|---|
@@ -389,9 +210,7 @@ flowchart LR
 > [!IMPORTANT]
 > **Close:** "I don't just demo AI. I make it safe to approve, then I leave the customer able to run it without me."
 
-::pb::
-
-# Appendix A · Rehearsal & timing {.center}
+# Appendix A · Rehearsal & timing
 
 | Min | Slide | Goal |
 |---|---|---|
@@ -410,26 +229,14 @@ flowchart LR
 - [ ] Two real stories ready: one win with a metric, one failure with a systemic fix
 - [ ] Rehearsed aloud, timed, twice
 
-::pb::
-
-# Appendix B1 · Setup, build & run — complete guide {.center}
+# Appendix B1 · Setup, build & run — complete guide
 
 > [!IMPORTANT]
 > Do §1–4 (no Salesforce needed) first; do §5–8 the day before the interview so a live org is ready. Re-run `make test` and `bridge demo --live` one hour before you present.
 
 ### 0 · Roadmap and time budget
 
-```mermaid
-flowchart LR
-  A[1 Install prerequisites 20 min] --> B[2 Get the code 5 min]
-  B --> C[3 Python env + tests 5 min]
-  C --> D[4 Offline demo and API 5 min]
-  D --> E[5 Salesforce Developer Org 15 min]
-  E --> F[6 Deploy metadata 5 min]
-  F --> G[7 OAuth app + secrets 15 min]
-  G --> H[8 Live demo 5 min]
-  H --> I[9 Docker / GitHub CI / Agentforce optional]
-```
+![Setup Roadmap Flow](./assets/setup_roadmap_flowchart.svg)
 
 > [!TIP]
 > **Stages 1–4 need no Salesforce account** and give you a fully working, tested system. Do them first; do stages 5–8 the day before the interview so a live org is ready.
@@ -753,9 +560,7 @@ Rotate the Consumer Secret if it was ever displayed on a shared screen; never co
 | Live smoke test | `pytest -m live -o addopts="" tests/live -v` |
 | Deploy metadata | `sf project deploy start --source-dir force-app --target-org dev` |
 
-::pb::
-
-# Appendix B2 · On-stage terminal runbook {.center}
+# Appendix B2 · On-stage terminal runbook
 
 ```bash
 git clone https://github.com/sm2774us/salesforce-agentforce-enterprise-bridge && cd salesforce-agentforce-enterprise-bridge
@@ -777,9 +582,7 @@ bridge bench -n 2000
 
 **Agentforce registration:** import `/openapi.json` as an External Service (Named Credential carries `X-API-Key`) → Flow actions → Agent Builder topic Actions.
 
-::pb::
-
-# Appendix C · Deep-dive Q&A (48 questions) {.center}
+# Appendix C · Deep-dive Q&A (48 questions)
 
 > [!TIP]
 > **How to use in a 45-minute panel:** open with the **30-second answer**, then expand with **Go deeper** only if the panel leans in. **If pushed** is the answer to the likely follow-up. Every claim marked *(repo)* is verifiable in the code; *(model)* means an assumption; *(roadmap)* means not built yet.
@@ -829,16 +632,7 @@ bridge bench -n 2000
 **30-second answer:** It's a thin governed **action plane**. ERP stays behind your integration layer, Data Cloud stays the system of grounding, Agentforce stays the reasoning/UX layer. The bridge adds governance and external connectivity and is replaceable because its contract is OpenAPI.
 
 **Go deeper:**
-```mermaid
-flowchart LR
-  ERP[ERP / Payments] --> MULE[MuleSoft System APIs]
-  MULE --> BR[Bridge: governed Actions]
-  KAF[Kafka / Streams] --> BR
-  BR -->|OpenAPI → External Service| AF[Agentforce Agent]
-  BR -->|REST / SOQL| CRM[(Sales / Service Cloud)]
-  SNOW[(Snowflake / Databricks)] -.zero-copy.-> DC[Data Cloud]
-  DC --> AF
-```
+![Solution Architecture](./assets/detailed_solution_architecture_flowchart.svg)
 - **Deployment options:** customer's Kubernetes (data residency), or a managed runtime; stateless containers *(repo: Dockerfile, non-root, read-only FS)*.
 - **Ownership:** customer's team runs it after handover — runbook, ADRs, tests, dashboards.
 - **Exit strategy:** the registry/manifest is the contract. Swap my service for Apex/Flow/Mule implementations without changing agent topics.
@@ -1016,14 +810,6 @@ flowchart LR
 **30-second answer:** The bridge degrades predictably: retries, then a circuit opens, readiness flips, actions fail fast with audited FAILED outcomes, and audit records queue for replay.
 
 **Go deeper:**
-```mermaid
-stateDiagram-v2
-  [*] --> Closed
-  Closed --> Open: 5 consecutive failures
-  Open --> HalfOpen: after 30s
-  HalfOpen --> Closed: success
-  HalfOpen --> Open: failure
-```
 - **Timeline:** failure → up to 4 attempts with jittered backoff (ceilings 0.2/0.4/0.8 s) → breaker opens → `CircuitOpenError` fails fast (no hammering a struggling org) → `/readyz` returns 503 so orchestrators stop routing.
 - **During the outage:** the telemetry mirror is skipped (counted in `mirror_failures`); audit records accumulate in the outbox (capacity 10,000) and replay in order on the next write or flush; the bounded queue returns 429 so upstream retries.
 - **Honest gaps *(roadmap)*:** (1) a **FAILED action is audited but not re-queued** — I'd add a durable retry/DLQ-replay; (2) the half-open state currently lets all calls through instead of a single probe; (3) the outbox is in memory, so a restart during an outage loses it.
@@ -1146,17 +932,6 @@ Owning this list candidly is intentional — it shows I know the difference betw
 **30-second answer:** That's ~115 events/s average, ~1–1.5k/s at a 10× peak — comfortable with partitioned streaming, but Salesforce write limits force batching and selectivity.
 
 **Go deeper:**
-```mermaid
-flowchart LR
-  SRC[Sources] --> K[(Kafka: partitions keyed by account)]
-  K --> C[Stateless consumers on K8s + HPA]
-  C --> R[(Redis/Postgres: dedupe, approvals, outbox)]
-  C --> DC[Data Cloud streaming ingestion]
-  C --> CT[Control Tower]
-  CT --> B[Batched Composite/Bulk writes]
-  B --> SF[(Salesforce)]
-  CT --> A[Audit → Salesforce + object-store archive]
-```
 - **Funnel:** 10M raw → maybe 1–2% actionable (100–200k) → ~10% high-risk. Only actionable events should hit CRM APIs; the rest go to Data Cloud ingestion/warehouse.
 - **Partitions:** ~24–48, consumer lag SLO, autoscale on lag.
 - **Tiered planning:** rules first; LLM only on ambiguous slices; cache by normalised-message hash.
@@ -1216,9 +991,7 @@ flowchart LR
 
 **Go deeper — ordered plan:** week 1 persist approvals/outbox and add Case upsert by External ID; week 2 durable retry for FAILED actions, single-probe breaker, kill-switch flags; week 3 LLM eval harness with shadow mode and CI gate; week 4 swap the simulator for Data Cloud ingestion/vector search, SSO for approvers, and an approver console (Salesforce-native via Flow). Each step maps to a risk named in Q26.
 
-::pb::
-
-# Appendix D · Questions to ask them {.center}
+# Appendix D · Questions to ask them
 
 1. How do FDEs and Deployment Strategists split discovery vs. build on a typical Agentforce engagement?
 2. What does a successful first 90 days look like on this team?

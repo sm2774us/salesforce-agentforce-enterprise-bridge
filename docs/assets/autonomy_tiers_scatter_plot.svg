@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 280" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 11px; }
+    .axis { stroke: #333; stroke-width: 2; }
+    .dot-low { fill: #28a745; stroke: #1e7e34; stroke-width: 2; }
+    .dot-high { fill: #dc3545; stroke: #bd2130; stroke-width: 2; }
+    .title { font-size: 14px; font-weight: bold; text-anchor: middle; }
+    .legend-text { font-size: 12px; }
+  </style>
+
+  <text x="250" y="25" class="title">Autonomy Tiers by Reversibility vs Risk</text>
+
+  <!-- Axes -->
+  <line x1="60" y1="230" x2="450" y2="230" class="axis" />
+  <line x1="60" y1="40" x2="60" y2="230" class="axis" />
+
+  <!-- Labels -->
+  <text x="255" y="265" text-anchor="middle" font-weight="bold">Reversibility (Higher = Easier to undo)</text>
+  <text x="25" y="135" text-anchor="middle" transform="rotate(-90 25 135)" font-weight="bold">Dollar / Business Impact</text>
+
+  <!-- Points -->
+  <!-- create_case: Reversibility=8, Dollar=2 -->
+  <circle cx="372" cy="192" r="14" class="dot-low" />
+  <text x="372" y="170" text-anchor="middle">create_case</text>
+
+  <!-- escalate_case: Reversibility=5, Dollar=6 -->
+  <circle cx="255" cy="116" r="14" class="dot-high" />
+  <text x="255" y="95" text-anchor="middle">escalate_case</text>
+
+  <!-- create_financial_review: Reversibility=4, Dollar=9 -->
+  <circle cx="216" cy="59" r="14" class="dot-high" />
+  <text x="216" y="38" text-anchor="middle">create_financial_review</text>
+
+  <!-- Legend -->
+  <g transform="translate(300, 210)">
+    <circle cx="10" cy="10" r="6" class="dot-low" />
+    <text x="22" y="14" class="legend-text">LOW (Auto)</text>
+    <circle cx="100" cy="10" r="6" class="dot-high" />
+    <text x="112" y="14" class="legend-text">HIGH (Human)</text>
+  </g>
+</svg>

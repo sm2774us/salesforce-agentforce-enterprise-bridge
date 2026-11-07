@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 240" width="100%" height="100%">
+  <style>
+    text { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif; fill: #222; font-size: 12px; }
+    .axis { stroke: #333; stroke-width: 2; }
+    .bar-auto { fill: #28a745; stroke: #1e7e34; stroke-width: 2; }
+    .bar-held { fill: #ffc107; stroke: #d39e00; stroke-width: 2; }
+    .bar-fail { fill: #dc3545; stroke: #bd2130; stroke-width: 2; }
+    .val { font-size: 14px; font-weight: bold; text-anchor: middle; }
+    .title { font-size: 14px; font-weight: bold; text-anchor: middle; }
+  </style>
+
+  <text x="225" y="25" class="title">Demo Decision Outcomes (6 Events Total)</text>
+
+  <!-- Axes -->
+  <line x1="50" y1="190" x2="410" y2="190" class="axis" />
+  <line x1="50" y1="40" x2="50" y2="190" class="axis" />
+
+  <!-- Bars -->
+  <!-- Executed: 5 -->
+  <rect x="90" y="65" width="70" height="125" class="bar-auto" rx="4" />
+  <text x="125" y="55" class="val">5</text>
+  <text x="125" y="210" text-anchor="middle">Executed</text>
+  <text x="125" y="224" text-anchor="middle">(Auto)</text>
+
+  <!-- Held: 1 -->
+  <rect x="200" y="165" width="70" height="25" class="bar-held" rx="4" />
+  <text x="235" y="155" class="val">1</text>
+  <text x="235" y="210" text-anchor="middle">Held for</text>
+  <text x="235" y="224" text-anchor="middle">Approval</text>
+
+  <!-- Denied/Failed: 0 -->
+  <rect x="310" y="188" width="70" height="2" class="bar-fail" rx="1" />
+  <text x="345" y="178" class="val">0</text>
+  <text x="345" y="210" text-anchor="middle">Denied /</text>
+  <text x="345" y="224" text-anchor="middle">Failed</text>
+</svg>
